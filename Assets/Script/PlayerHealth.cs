@@ -1,20 +1,32 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth = 100f;
     public float currentHealth;
 
+    public GameObject gameOverPanel;
+
+    private bool isDead = false;
+
     void Start()
     {
-        // เริ่มเกมมาให้เลือดเต็ม
         currentHealth = maxHealth;
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
     }
 
-    // ฟังก์ชันสำหรับรับความเสียหาย (ใครจะโจมตีเราต้องเรียกใช้อันนี้)
     public void TakeDamage(float damage)
     {
+        if (isDead) return;
+
         currentHealth -= damage;
+
+        if (currentHealth < 0)
+            currentHealth = 0;
+
         Debug.Log("โอ๊ย! โดนโจมตี! เลือดเหลือ: " + currentHealth);
 
         if (currentHealth <= 0)
@@ -25,8 +37,20 @@ public class PlayerHealth : MonoBehaviour
 
     void Die()
     {
+        isDead = true;
+
         Debug.Log("ตัวละครตายแล้ว...");
-        // ใส่คำสั่งเมื่อตายตรงนี้ เช่น โหลดฉากใหม่ หรือเล่น Animation ตาย
-        gameObject.SetActive(false); // หายไปจากฉาก
+
+        gameObject.SetActive(false);
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(
+            SceneManager.GetActiveScene().buildIndex
+        );
     }
 }
