@@ -19,11 +19,20 @@ public class PlayerShooting : MonoBehaviour
 
     private int currentBulletIndex = 0;
     private bool canShoot = true;
-  
+
+    [Header("Ammo")]
+    public int maxAmmo = 30;
+    public int currentAmmo;
+
+    void Start()
+    {
+        currentAmmo = maxAmmo;
+    }
+
     void Update()
     {
         // 🔫 ยิง
-        if (Input.GetButton("Fire1") && canShoot)
+        if (Input.GetButton("Fire1") && canShoot && currentAmmo > 0)
         {
             StartCoroutine(ShootRoutine());
         }
@@ -47,7 +56,9 @@ public class PlayerShooting : MonoBehaviour
 
     void Shoot()
 {
-    if (firePoint == null || bullets.Length == 0) return;
+        currentAmmo--;
+
+        if (firePoint == null || bullets.Length == 0) return;
 
     GameObject bulletObj;
 

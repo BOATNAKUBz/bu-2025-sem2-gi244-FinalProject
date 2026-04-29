@@ -8,6 +8,11 @@ public class WaveController : MonoBehaviour
 
     private List<GameObject> aliveEnemies = new();
 
+    public int AliveEnemyCount
+    {
+        get { return aliveEnemies.Count; }
+    }
+
     // spawn wave
     public IEnumerator SpawnWave(Wave wave)
     {

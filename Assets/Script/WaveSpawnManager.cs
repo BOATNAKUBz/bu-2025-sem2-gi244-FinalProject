@@ -7,6 +7,10 @@ public class WaveSpawnManager : MonoBehaviour
     public WaveController waveController;
 
     private int currentWave = 0;
+    public int CurrentWave
+    {
+        get { return currentWave + 1; }
+    }
 
     void Start()
     {
