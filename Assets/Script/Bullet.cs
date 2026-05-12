@@ -7,35 +7,27 @@ public class Bullet : MonoBehaviour
     public int damage = 10;
 
     private Rigidbody rb;
-    private bool canHit = false; // กันชนตอน spawn
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+
+        // 🔥 สำคัญมาก กันทะลุ
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
     void OnEnable()
     {
         CancelInvoke();
 
-        // ตั้งเวลาให้กระสุนหาย
         Invoke(nameof(ReturnToPool), lifeTime);
 
-        // reset ความเร็ว (สำคัญมากกับ Object Pool)
         if (rb != null)
         {
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
-
-        // กันชนช่วงแรก (แก้หายแว๊บ)
-        canHit = false;
-        Invoke(nameof(EnableHit), 0.1f);
-    }
-
-    void EnableHit()
-    {
-        canHit = true;
     }
 
     // ยิงกระสุน
@@ -49,20 +41,28 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (!canHit) return; // สำคัญมาก
-
-        // ไม่ชน Player
+        // ❌ ไม่ชนตัวเอง
         if (collision.gameObject.CompareTag("Player"))
             return;
 
-        // โดนศัตรู
+        // 🟥 โดนศัตรู
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<EnemyBase>()?.TakeDamage(damage);
-            Debug.Log("Hit: " + collision.gameObject.name);
+            EnemyBase enemy = collision.gameObject.GetComponent<EnemyBase>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage);
+            }
+
+            ReturnToPool();
+            return;
         }
 
-        ReturnToPool();
+        // 🧱 ชนกำแพง
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            ReturnToPool();
+        }
     }
 
     void ReturnToPool()

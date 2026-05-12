@@ -21,10 +21,6 @@ public class EnemyBase : MonoBehaviour
         {
             player = playerObj.transform;
         }
-        else
-        {
-            Debug.LogWarning("Player not found! กรุณาตั้ง Tag = Player");
-        }
     }
 
     // รับดาเมจ
