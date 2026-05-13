@@ -12,9 +12,8 @@ public class Bullet : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        // 🔥 สำคัญมาก กันทะลุ
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        rb.interpolation = RigidbodyInterpolation.Interpolate;
+        rb.useGravity = false;
+        rb.isKinematic = false;
     }
 
     void OnEnable()
@@ -23,43 +22,36 @@ public class Bullet : MonoBehaviour
 
         Invoke(nameof(ReturnToPool), lifeTime);
 
-        if (rb != null)
-        {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 
-    // ยิงกระสุน
     public void Fire(Vector3 dir)
     {
-        if (rb != null)
-        {
-            rb.velocity = dir.normalized * speed;
-        }
+        rb.velocity = dir.normalized * speed;
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        // ❌ ไม่ชนตัวเอง
-        if (collision.gameObject.CompareTag("Player"))
+        // ❌ ไม่ชน Player
+        if (other.CompareTag("Player"))
             return;
 
-        // 🟥 โดนศัตรู
-        if (collision.gameObject.CompareTag("Enemy"))
+        // 👾 โดนศัตรู
+        if (other.CompareTag("Enemy"))
         {
-            EnemyBase enemy = collision.gameObject.GetComponent<EnemyBase>();
+            EnemyBase enemy = other.GetComponent<EnemyBase>();
+
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);
             }
 
             ReturnToPool();
-            return;
         }
 
         // 🧱 ชนกำแพง
-        if (collision.gameObject.CompareTag("Wall"))
+        if (other.CompareTag("Wall"))
         {
             ReturnToPool();
         }

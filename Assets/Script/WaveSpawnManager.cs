@@ -3,10 +3,15 @@ using System.Collections;
 
 public class WaveSpawnManager : MonoBehaviour
 {
+    [Header("Wave Config")]
     public Wave[] waveConfigurations;
+
+    [Header("Controller")]
     public WaveController waveController;
 
     private int currentWave = 0;
+
+    // 📌 เอาไว้โชว์ UI
     public int CurrentWave
     {
         get { return currentWave + 1; }
@@ -23,22 +28,30 @@ public class WaveSpawnManager : MonoBehaviour
         {
             Wave wave = waveConfigurations[currentWave];
 
-            Debug.Log("Start Wave: " + (currentWave + 1));
+            Debug.Log(
+                "🌊 Start Wave: " + (currentWave + 1)
+            );
 
-            // เริ่ม spawn
-            yield return StartCoroutine(waveController.SpawnWave(wave));
+            // 👾 Spawn wave
+            yield return StartCoroutine(
+                waveController.SpawnWave(wave)
+            );
 
-            // รอจนศัตรูตายหมด
-            yield return new WaitUntil(() => waveController.IsAllEnemiesDead());
+            // ⏳ รอศัตรูตายหมด
+            yield return new WaitUntil(
+                () => waveController.IsAllEnemiesDead()
+            );
 
-            Debug.Log("Wave Complete!");
+            Debug.Log("✅ Wave Complete!");
 
-            // พักก่อน wave ถัดไป
-            yield return new WaitForSeconds(wave.waveInterval);
+            // ⏳ พักก่อน wave ใหม่
+            yield return new WaitForSeconds(
+                wave.waveInterval
+            );
 
             currentWave++;
         }
 
-        Debug.Log("🎉 All Waves Completed!");
+        Debug.Log("🎉 ALL WAVES COMPLETED!");
     }
 }

@@ -1,93 +1,171 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[System.Serializable]
-public class BulletData
-{
-    public string bulletName;
-    public GameObject bulletPrefab; // ใช้ fallback ถ้าไม่มี pool
-    public float fireRate = 0.2f;
-}
-
 public class PlayerShooting : MonoBehaviour
 {
     [Header("Fire Point")]
     public Transform firePoint;
 
-    [Header("Bullet Types")]
-    public BulletData[] bullets;
+  
+    // Normal Bullet
+   
+    [Header("Normal Bullet")]
+    public GameObject normalBulletPrefab;
+    public float normalFireRate = 0.2f;
 
-    private int currentBulletIndex = 0;
-    private bool canShoot = true;
+    
+    // Bomb Bullet
+    
+    [Header("Bomb Bullet")]
+    public GameObject bombBulletPrefab;
+    public float bombFireRate = 1f;
 
+    // Ammo
+   
     [Header("Ammo")]
     public int maxAmmo = 30;
     public int currentAmmo;
 
+
+    // Bomb Ammo
+
+    [Header("Bomb Ammo")]
+    public int maxBombAmmo = 5;
+    public int currentBombAmmo;
+
+    private bool canShoot = true;
+    private bool canBombShoot = true;
+
     void Start()
     {
         currentAmmo = maxAmmo;
+        currentBombAmmo = maxBombAmmo;
     }
 
     void Update()
     {
-        // 🔫 ยิง
-        if (Input.GetButton("Fire1") && canShoot && currentAmmo > 0)
+        // ยิงปกติ
+        if (Input.GetButton("Fire1")
+            && canShoot
+            && currentAmmo > 0)
         {
-            StartCoroutine(ShootRoutine());
+            StartCoroutine(NormalShootRoutine());
         }
 
-        // 🔄 เปลี่ยนกระสุน
-        if (Input.GetKeyDown(KeyCode.E))
+        // ยิง Bomb
+        if (Input.GetButtonDown("Fire2")
+            && canBombShoot
+            && currentBombAmmo > 0)
         {
-            SwitchBullet();
+            StartCoroutine(BombShootRoutine());
         }
     }
 
-    IEnumerator ShootRoutine()
+    // ยิงปกติ
+   
+    IEnumerator NormalShootRoutine()
     {
         canShoot = false;
 
-        Shoot();
+        ShootNormal();
 
-        yield return new WaitForSeconds(bullets[currentBulletIndex].fireRate);
+        yield return new WaitForSeconds(
+            normalFireRate
+        );
+
         canShoot = true;
     }
 
-    void Shoot()
-{
+    void ShootNormal()
+    {
         currentAmmo--;
 
-        if (firePoint == null || bullets.Length == 0) return;
+        GameObject bulletObj;
 
-    GameObject bulletObj;
+        if (ProjectileObjectPool.staticinstance != null)
+        {
+            bulletObj =
+                ProjectileObjectPool.staticinstance.Acquire();
+        }
+        else
+        {
+            bulletObj = Instantiate(
+                normalBulletPrefab
+            );
+        }
 
-    if (ProjectileObjectPool.staticinstance != null)
-    {
-        bulletObj = ProjectileObjectPool.staticinstance.Acquire();
+        bulletObj.transform.position =
+            firePoint.position;
+
+        bulletObj.transform.rotation =
+            firePoint.rotation;
+
+        Bullet bullet =
+            bulletObj.GetComponent<Bullet>();
+
+        if (bullet != null)
+        {
+            bullet.Fire(firePoint.forward);
+        }
     }
-    else
+
+
+    // ยิง Bomb
+
+    IEnumerator BombShootRoutine()
     {
-        bulletObj = Instantiate(
-            bullets[currentBulletIndex].bulletPrefab
+        canBombShoot = false;
+
+        ShootBomb();
+
+        yield return new WaitForSeconds(
+            bombFireRate
         );
+
+        canBombShoot = true;
     }
 
-    bulletObj.transform.position = firePoint.position;
-    bulletObj.transform.rotation = firePoint.rotation;
-
-    Bullet bullet = bulletObj.GetComponent<Bullet>();
-    if (bullet != null)
+    void ShootBomb()
     {
-        bullet.Fire(firePoint.forward);
+        currentBombAmmo--;
+
+        GameObject bombObj = Instantiate(
+            bombBulletPrefab,
+            firePoint.position,
+            firePoint.rotation
+        );
+
+        BombBullet bomb =
+            bombObj.GetComponent<BombBullet>();
+
+        if (bomb != null)
+        {
+            bomb.Fire(firePoint.forward);
+        }
     }
-}
-    void SwitchBullet()
+
+    // เติม Ammo
+
+    public void AddAmmo(int amount)
     {
-        if (bullets.Length == 0) return;
+        currentAmmo += amount;
 
-        currentBulletIndex = (currentBulletIndex + 1) % bullets.Length;
+        if (currentAmmo > maxAmmo)
+        {
+            currentAmmo = maxAmmo;
+        }
+    }
 
-        Debug.Log("Current Bullet: " + bullets[currentBulletIndex].bulletName);
+   
+    //  เติม Bomb Ammo
+
+    public void AddBombAmmo(int amount)
+    {
+        currentBombAmmo += amount;
+
+        if (currentBombAmmo > maxBombAmmo)
+        {
+            currentBombAmmo = maxBombAmmo;
+        }
     }
 }

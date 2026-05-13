@@ -13,10 +13,9 @@ GameObject:
   - component: {fileID: 3086971972549905039}
   - component: {fileID: 1208728145451059293}
   - component: {fileID: 639864737314806519}
-  - component: {fileID: 110573289301432286}
   - component: {fileID: 2025010661264219169}
   - component: {fileID: 7811822133035031331}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shooter
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -67,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 4dd61b4d3933ecb4b95021f9cd2a51ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -139,20 +138,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &110573289301432286
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 215242648639941598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20d6cc975025fe042b37cb9e4f152657, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 8257223487444606468, guid: 8598d57283095694e8ee7d3a289f51c7, type: 3}
-  initialPoolSize: 10
 --- !u!114 &2025010661264219169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,7 +188,7 @@ GameObject:
   - component: {fileID: 2984585819361090077}
   - component: {fileID: 6419014280719731078}
   - component: {fileID: 7560275750905216719}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -254,7 +239,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 15350bbe03fd4a649b6d263578a46857, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -306,7 +291,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3721958245033463792}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Fire point
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -4,51 +4,81 @@ using System.Collections.Generic;
 
 public class WaveController : MonoBehaviour
 {
+    [Header("Spawn Points")]
     public Transform[] spawnPoints;
 
+    // 👾 ศัตรูที่ยังไม่ตาย
     private List<GameObject> aliveEnemies = new();
 
+    // 📌 UI เอาไปใช้ได้
     public int AliveEnemyCount
     {
         get { return aliveEnemies.Count; }
     }
 
-    // spawn wave
+    // =========================================
+    // 🌊 Spawn Wave
+    // =========================================
     public IEnumerator SpawnWave(Wave wave)
     {
-        for (int i = 0; i < wave.enemyCount; i++)
+        // spawn ตามลำดับ
+        for (int i = 0; i < wave.enemySequence.Length; i++)
         {
-            SpawnEnemy(wave);
+            SpawnEnemy(wave.enemySequence[i]);
 
-            yield return new WaitForSeconds(wave.spawnInterval);
+            yield return new WaitForSeconds(
+                wave.spawnInterval
+            );
         }
     }
 
-    void SpawnEnemy(Wave wave)
+    // =========================================
+    // 👾 Spawn Enemy
+    // =========================================
+    void SpawnEnemy(GameObject enemyPrefab)
     {
-        int enemyIndex = Random.Range(0, wave.enemyPrefabs.Length);
-        int spawnIndex = Random.Range(0, spawnPoints.Length);
+        if (spawnPoints.Length == 0)
+        {
+            Debug.LogWarning("No Spawn Points!");
+            return;
+        }
 
-        GameObject enemy = Instantiate(
-            wave.enemyPrefabs[enemyIndex],
-            spawnPoints[spawnIndex].position,
-            spawnPoints[spawnIndex].rotation
+        // 🎲 สุ่มจุด spawn
+        int spawnIndex = Random.Range(
+            0,
+            spawnPoints.Length
         );
 
+        Transform spawnPoint = spawnPoints[spawnIndex];
+
+        // 👾 สร้างศัตรู
+        GameObject enemy = Instantiate(
+            enemyPrefab,
+            spawnPoint.position,
+            spawnPoint.rotation
+        );
+
+        // 📌 เก็บ enemy ที่ยังไม่ตาย
         aliveEnemies.Add(enemy);
 
-        // ตอนศัตรูตาย → เอาออกจาก list
-        EnemyBase enemyBase = enemy.GetComponent<EnemyBase>();
-        if (enemyBase != null)
-        {
-            enemyBase.onDeath += () =>
-            {
-                aliveEnemies.Remove(enemy);
-            };
-        }
+        // 🧠 เช็คตอนตาย
+        StartCoroutine(RemoveDeadEnemy(enemy));
     }
 
-    // เช็คว่าศัตรูตายหมดยัง
+    // =========================================
+    // ❌ ลบ enemy ที่ตายแล้ว
+    // =========================================
+    IEnumerator RemoveDeadEnemy(GameObject enemy)
+    {
+        // รอจน object ถูก destroy
+        yield return new WaitUntil(() => enemy == null);
+
+        aliveEnemies.Remove(enemy);
+    }
+
+    // =========================================
+    // ✅ ศัตรูหมดหรือยัง
+    // =========================================
     public bool IsAllEnemiesDead()
     {
         return aliveEnemies.Count == 0;

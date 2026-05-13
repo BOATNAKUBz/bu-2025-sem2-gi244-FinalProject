@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4330157081268987682}
   - component: {fileID: 354562009163669199}
   - component: {fileID: 6750273172796613213}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: 'Walker '
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fc2cc97adad0ff4c902d855d68d0680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 30
+  maxHP: 40
 --- !u!114 &354562009163669199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 30
-  speed: 3
+  speed: 4
   stopDistance: 1.5
   damage: 10
   attackCooldown: 1

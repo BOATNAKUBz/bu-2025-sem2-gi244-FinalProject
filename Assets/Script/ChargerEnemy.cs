@@ -1,56 +1,78 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
-public class ChargerEnemy : MonoBehaviour
+public class EnemyCharger : EnemyBase
 {
-    public float detectRange = 10f;
-    public float chargeSpeed = 18f;
-    public float chargeDelay = 0.5f;
-    public float cooldown = 2f;
+    [Header("Movement")]
+    public float moveSpeed = 2f;
 
-    private Transform player;
+    [Header("Dash")]
+    public float dashSpeed = 15f;
+    public float dashDuration = 0.5f;
+    public float dashCooldown = 3f;
+
+    [Header("Attack")]
+    public int damage = 20;
+
+    private bool isDashing = false;
+    private bool canDash = true;
+
     private Rigidbody rb;
-    private bool canCharge = true;
 
-    void Start()
+    protected override void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        rb = GetComponent<Rigidbody>();
+        base.Start();
 
-        rb.freezeRotation = true;
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        if (player == null || !canCharge) return;
+        if (player == null) return;
 
-        float dist = Vector3.Distance(transform.position, player.position);
+        Vector3 dir = (player.position - transform.position).normalized;
+        dir.y = 0;
 
-        if (dist <= detectRange)
+        transform.forward = dir;
+
+        // 👣 เดินปกติ
+        if (!isDashing)
         {
-            StartCoroutine(Charge());
+            transform.position += dir * moveSpeed * Time.deltaTime;
+        }
+
+        // ⚡ Dash
+        if (canDash)
+        {
+            StartCoroutine(Dash(dir));
         }
     }
 
-    IEnumerator Charge()
+    IEnumerator Dash(Vector3 dir)
     {
-        canCharge = false;
+        canDash = false;
+        isDashing = true;
+
+        rb.velocity = dir * dashSpeed;
+
+        yield return new WaitForSeconds(dashDuration);
 
         rb.velocity = Vector3.zero;
 
-        Vector3 dir = (player.position - transform.position).normalized;
-        dir.y = 0; // �ѹ��¢��ŧ
+        isDashing = false;
 
-        yield return new WaitForSeconds(chargeDelay);
+        yield return new WaitForSeconds(dashCooldown);
 
-        rb.velocity = dir * chargeSpeed;
+        canDash = true;
+    }
 
-        yield return new WaitForSeconds(0.4f);
-
-        rb.velocity = Vector3.zero;
-
-        yield return new WaitForSeconds(cooldown);
-
-        canCharge = true;
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject
+                .GetComponent<PlayerHealth>()
+                ?.TakeDamage(damage);
+        }
     }
 }

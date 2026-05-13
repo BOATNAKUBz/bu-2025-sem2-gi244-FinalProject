@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 9024432770531059278}
   - component: {fileID: 1479277154844632381}
   - component: {fileID: 1061438586107243722}
-  - component: {fileID: 2084369064627032243}
+  - component: {fileID: 2381805564501575491}
   - component: {fileID: 3813921196436462004}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Charger
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 4c1551585a4f15d43baec0153d2ef5a6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 30
---- !u!114 &2084369064627032243
+--- !u!114 &2381805564501575491
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,14 +132,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4512956145074998209}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e08a34a14accad141b54684eb6ddc98e, type: 3}
+  m_Script: {fileID: 11500000, guid: 025698b0e61b2d7408dc7c2850611657, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 30
-  speed: 20
-  stopDistance: 1.5
-  damage: 10
-  attackCooldown: 1
+  moveSpeed: 2
+  dashSpeed: 20
+  dashDuration: 0.5
+  dashCooldown: 3
+  damage: 20
 --- !u!54 &3813921196436462004
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -165,5 +166,5 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 90
+  m_Constraints: 80
   m_CollisionDetection: 0
