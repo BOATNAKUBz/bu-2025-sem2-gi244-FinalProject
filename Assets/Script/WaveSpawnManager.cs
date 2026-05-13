@@ -9,6 +9,9 @@ public class WaveSpawnManager : MonoBehaviour
     [Header("Controller")]
     public WaveController waveController;
 
+    [Header("Stage Complete")]
+    public StageComplete stageComplete;
+
     private int currentWave = 0;
 
     // 📌 เอาไว้โชว์ UI
@@ -26,10 +29,12 @@ public class WaveSpawnManager : MonoBehaviour
     {
         while (currentWave < waveConfigurations.Length)
         {
-            Wave wave = waveConfigurations[currentWave];
+            Wave wave =
+                waveConfigurations[currentWave];
 
             Debug.Log(
-                "🌊 Start Wave: " + (currentWave + 1)
+                "🌊 Start Wave: " +
+                (currentWave + 1)
             );
 
             // 👾 Spawn wave
@@ -52,6 +57,23 @@ public class WaveSpawnManager : MonoBehaviour
             currentWave++;
         }
 
+        // =================================
+        // 🎉 ผ่านทุก Wave
+        // =================================
         Debug.Log("🎉 ALL WAVES COMPLETED!");
+
+        // 🔥 YOU WIN
+        if (stageComplete != null)
+        {
+            Debug.Log("WIN STAGE");
+
+            stageComplete.WinStage();
+        }
+        else
+        {
+            Debug.LogError(
+                "StageComplete is NULL!"
+            );
+        }
     }
 }

@@ -19,6 +19,18 @@ public class FinalBoss : EnemyBase
     private bool canAttack = true;
     private bool isAttacking = false;
 
+    // 🔥 Win System
+    private StageComplete stageComplete;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        // หา StageComplete ใน Scene
+        stageComplete =
+            FindObjectOfType<StageComplete>();
+    }
+
     void Update()
     {
         if (player == null) return;
@@ -33,22 +45,22 @@ public class FinalBoss : EnemyBase
         // 👀 หันหา player
         transform.forward = dir;
 
-        // 📏 ระยะห่าง
+        // 📏 ระยะ
         float distance =
             Vector3.Distance(
                 transform.position,
                 player.position
             );
 
-        // 👣 เดินเข้าหา player
-        if (!isAttacking && distance > attackRange)
+        // 👣 เดินหา player
+        if (!isAttacking &&
+            distance > attackRange)
         {
             transform.position +=
                 dir *
                 moveSpeed *
                 Time.deltaTime;
 
-            // 🎬 วิ่ง
             if (animator != null)
             {
                 animator.SetBool(
@@ -59,7 +71,6 @@ public class FinalBoss : EnemyBase
         }
         else
         {
-            // 🛑 หยุดเดิน
             if (animator != null)
             {
                 animator.SetBool(
@@ -69,14 +80,14 @@ public class FinalBoss : EnemyBase
             }
         }
 
-        // ⚔ เข้า range แล้วค่อยโจมตี
-        if (
-            !isAttacking &&
+        // ⚔ โจมตี
+        if (!isAttacking &&
             canAttack &&
-            distance <= attackRange
-        )
+            distance <= attackRange)
         {
-            StartCoroutine(AttackPattern());
+            StartCoroutine(
+                AttackPattern()
+            );
         }
     }
 
@@ -85,7 +96,6 @@ public class FinalBoss : EnemyBase
         canAttack = false;
         isAttacking = true;
 
-        // 🎲 สุ่มสกิล
         int attack =
             Random.Range(0, 3);
 
@@ -110,7 +120,6 @@ public class FinalBoss : EnemyBase
                 break;
         }
 
-        // 😮‍💨 Recovery
         yield return new WaitForSeconds(
             attackCooldown
         );
@@ -119,20 +128,20 @@ public class FinalBoss : EnemyBase
         canAttack = true;
     }
 
-    // =========================================
-    // ⚔ Slash Attack
-    // =========================================
+    // =================================
+    // ⚔ Slash
+    // =================================
     IEnumerator SlashAttack()
     {
-        Debug.Log("⚔ Slash Attack");
+        Debug.Log("Slash Attack");
 
-        // 🎬 Animation
         if (animator != null)
         {
-            animator.SetTrigger("Slash");
+            animator.SetTrigger(
+                "Attack"
+            );
         }
 
-        // 🔴 วงเตือน
         GameObject warning =
             Instantiate(
                 warningCirclePrefab,
@@ -148,10 +157,10 @@ public class FinalBoss : EnemyBase
                 6f
             );
 
-        // ⏳ เวลาให้หลบ
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(
+            1f
+        );
 
-        // 💥 ดาเมจ
         if (player != null)
         {
             float distance =
@@ -162,30 +171,27 @@ public class FinalBoss : EnemyBase
 
             if (distance < 4f)
             {
-                PlayerHealth ph =
-                    player.GetComponentInParent<PlayerHealth>();
-
-                if (ph != null)
-                {
-                    ph.TakeDamage(damage);
-                }
+                player
+                    .GetComponent<PlayerHealth>()
+                    ?.TakeDamage(damage);
             }
         }
 
         Destroy(warning);
     }
 
-    // =========================================
-    // 🌪 Spin Attack
-    // =========================================
+    // =================================
+    // 🌪 Spin
+    // =================================
     IEnumerator SpinAttack()
     {
-        Debug.Log("🌪 Spin Attack");
+        Debug.Log("Spin Attack");
 
-        // 🎬 Animation
         if (animator != null)
         {
-            animator.SetTrigger("Spin");
+            animator.SetTrigger(
+                "Attack"
+            );
         }
 
         GameObject warning =
@@ -202,21 +208,21 @@ public class FinalBoss : EnemyBase
                 8f
             );
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(
+            1f
+        );
 
         float spinTime = 2f;
         float timer = 0f;
 
         while (timer < spinTime)
         {
-            // 🌪 หมุน
             transform.Rotate(
                 Vector3.up *
                 720 *
                 Time.deltaTime
             );
 
-            // 💥 ดาเมจต่อเนื่อง
             if (player != null)
             {
                 float distance =
@@ -227,13 +233,9 @@ public class FinalBoss : EnemyBase
 
                 if (distance < 4f)
                 {
-                    PlayerHealth ph =
-                        player.GetComponentInParent<PlayerHealth>();
-
-                    if (ph != null)
-                    {
-                        ph.TakeDamage(1);
-                    }
+                    player
+                        .GetComponent<PlayerHealth>()
+                        ?.TakeDamage(1);
                 }
             }
 
@@ -245,17 +247,18 @@ public class FinalBoss : EnemyBase
         Destroy(warning);
     }
 
-    // =========================================
+    // =================================
     // 💥 Shockwave
-    // =========================================
+    // =================================
     IEnumerator ShockwaveAttack()
     {
-        Debug.Log("💥 Shockwave");
+        Debug.Log("Shockwave");
 
-        // 🎬 Animation
         if (animator != null)
         {
-            animator.SetTrigger("Shockwave");
+            animator.SetTrigger(
+                "Attack"
+            );
         }
 
         GameObject warning =
@@ -272,7 +275,9 @@ public class FinalBoss : EnemyBase
                 12f
             );
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(
+            1.5f
+        );
 
         if (player != null)
         {
@@ -284,18 +289,32 @@ public class FinalBoss : EnemyBase
 
             if (distance < 6f)
             {
-                PlayerHealth ph =
-                    player.GetComponentInParent<PlayerHealth>();
-
-                if (ph != null)
-                {
-                    ph.TakeDamage(
+                player
+                    .GetComponent<PlayerHealth>()
+                    ?.TakeDamage(
                         damage + 10
                     );
-                }
             }
         }
 
         Destroy(warning);
+    }
+
+    // =================================
+    // ☠ ตาย
+    // =================================
+    protected override void Die()
+    {
+        Debug.Log("BOSS DEAD");
+
+        // 🔥 ชนะด่าน
+        if (stageComplete != null)
+        {
+            stageComplete.WinStage();
+
+            Debug.Log("YOU WIN");
+        }
+
+        base.Die();
     }
 }
