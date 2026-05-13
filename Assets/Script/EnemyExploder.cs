@@ -5,33 +5,72 @@ public class EnemyExploder : EnemyBase
 {
     [Header("Movement")]
     public float moveSpeed = 3f;
-    public float explodeRange = 2f;
 
     [Header("Explosion")]
+    public float explodeRange = 2f;
     public int explosionDamage = 40;
-    public float explodeDelay = 3f;
+    public float explodeDelay = 2f;
+
+    [Header("Effect")]
+    public GameObject explosionEffect;
 
     private bool isExploding = false;
 
     void Update()
     {
-        if (player == null || isExploding) return;
+        if (player == null || isExploding)
+            return;
 
-        Vector3 dir = (player.position - transform.position).normalized;
+        // 🎯 ทิศหา Player
+        Vector3 dir =
+            (player.position - transform.position)
+            .normalized;
+
         dir.y = 0;
 
+        // 👀 หันหน้า
         transform.forward = dir;
 
-        float distance = Vector3.Distance(transform.position, player.position);
+        // 📏 ระยะ
+        float distance =
+            Vector3.Distance(
+                transform.position,
+                player.position
+            );
 
-        // 👣 วิ่งหา player
+        // 👣 วิ่งหา Player
         if (distance > explodeRange)
         {
-            transform.position += dir * moveSpeed * Time.deltaTime;
+            transform.position +=
+                dir *
+                moveSpeed *
+                Time.deltaTime;
+
+            // 🎬 วิ่ง
+            if (animator != null)
+            {
+                animator.SetBool(
+                    "isRunning",
+                    true
+                );
+            }
         }
         else
         {
-            StartCoroutine(Explode());
+            // 🛑 หยุดวิ่ง
+            if (animator != null)
+            {
+                animator.SetBool(
+                    "isRunning",
+                    false
+                );
+            }
+
+            // 💣 เริ่มระเบิด
+            if (!isExploding)
+            {
+                StartCoroutine(Explode());
+            }
         }
     }
 
@@ -39,21 +78,57 @@ public class EnemyExploder : EnemyBase
     {
         isExploding = true;
 
-        Debug.Log("💣 Exploder จะระเบิด!");
+        Debug.Log("💣 EXPLODER");
 
-        yield return new WaitForSeconds(explodeDelay);
+        // 🎬 ใช้ animation ยิงแทนระเบิด
+        if (animator != null)
+        {
+            animator.SetTrigger("Shoot");
+        }
 
+        // ⏳ เวลาให้ player หนี
+        yield return new WaitForSeconds(
+            explodeDelay
+        );
+
+        // 💥 Effect ระเบิด
+        if (explosionEffect != null)
+        {
+            Instantiate(
+                explosionEffect,
+                transform.position,
+                Quaternion.identity
+            );
+        }
+
+        // 💥 เช็คดาเมจ
         if (player != null)
         {
-            float dist = Vector3.Distance(transform.position, player.position);
+            float dist =
+                Vector3.Distance(
+                    transform.position,
+                    player.position
+                );
 
             if (dist <= explodeRange + 1f)
             {
-                player.GetComponent<PlayerHealth>()
-                    ?.TakeDamage(explosionDamage);
+                PlayerHealth ph =
+                    player.GetComponentInParent<PlayerHealth>();
+
+                if (ph != null)
+                {
+                    ph.TakeDamage(
+                        explosionDamage
+                    );
+
+                    Debug.Log(
+                        "PLAYER HIT BY EXPLOSION"
+                    );
+                }
             }
         }
 
+        // ☠ ตาย
         Die();
     }
 }

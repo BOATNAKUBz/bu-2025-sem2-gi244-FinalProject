@@ -13,9 +13,19 @@ public class EnemyMelee : EnemyBase
 
     private bool canAttack = true;
 
+    private Rigidbody rb;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        rb = GetComponent<Rigidbody>();
+    }
+
     void Update()
     {
-        if (player == null) return;
+        if (player == null)
+            return;
 
         float distance =
             Vector3.Distance(
@@ -32,11 +42,14 @@ public class EnemyMelee : EnemyBase
         // 👣 เดินหา player
         if (distance > stopDistance)
         {
-            transform.position +=
+            rb.MovePosition(
+                transform.position +
                 dir *
                 speed *
-                Time.deltaTime;
+                Time.deltaTime
+            );
 
+            // 🎬 วิ่ง
             if (animator != null)
             {
                 animator.SetBool(
@@ -47,6 +60,7 @@ public class EnemyMelee : EnemyBase
         }
         else
         {
+            // 🛑 หยุดวิ่ง
             if (animator != null)
             {
                 animator.SetBool(
@@ -55,6 +69,7 @@ public class EnemyMelee : EnemyBase
                 );
             }
 
+            // 👊 ตี
             if (canAttack)
             {
                 StartCoroutine(Attack());
@@ -62,21 +77,26 @@ public class EnemyMelee : EnemyBase
         }
 
         // 🎯 หันหน้า
-        transform.forward = dir;
+        if (dir != Vector3.zero)
+        {
+            transform.forward = dir;
+        }
     }
 
     IEnumerator Attack()
     {
         canAttack = false;
 
-        // 🎬 animation ตี
+        // 🎬 Animation ตี
         if (animator != null)
         {
             animator.SetTrigger("Attack");
         }
 
-        // รอก่อนตีโดน
-        yield return new WaitForSeconds(0.5f);
+        // ⏳ รอจังหวะตี
+        yield return new WaitForSeconds(
+            0.5f
+        );
 
         if (player != null)
         {
@@ -86,18 +106,24 @@ public class EnemyMelee : EnemyBase
                     player.position
                 );
 
+            // 💥 เช็คระยะตี
             if (dist <= stopDistance + 0.5f)
             {
                 PlayerHealth ph =
-                    player.GetComponent<PlayerHealth>();
+                    player.GetComponentInParent<PlayerHealth>();
 
                 if (ph != null)
                 {
                     ph.TakeDamage(damage);
+
+                    Debug.Log(
+                        "MELEE HIT PLAYER"
+                    );
                 }
             }
         }
 
+        // 😮‍💨 cooldown
         yield return new WaitForSeconds(
             attackCooldown
         );
