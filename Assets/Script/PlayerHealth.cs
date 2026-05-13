@@ -10,9 +10,13 @@ public class PlayerHealth : MonoBehaviour
 
     private bool isDead = false;
 
+    private Animator animator;
+
     void Start()
     {
         currentHealth = maxHealth;
+
+        animator = GetComponentInChildren<Animator>();
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
@@ -41,8 +45,21 @@ public class PlayerHealth : MonoBehaviour
 
         Debug.Log("ตัวละครตายแล้ว...");
 
-        gameObject.SetActive(false);
+        // เล่น animation ตาย
+        if (animator != null)
+        {
+            animator.SetTrigger("Die");
+        }
 
+        // ปิดการขยับ
+        GetComponent<PlayerController>().enabled = false;
+
+        // รอแล้วค่อยขึ้น Game Over
+        Invoke(nameof(ShowGameOver), 2f);
+    }
+
+    void ShowGameOver()
+    {
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
     }

@@ -24,26 +24,57 @@ public class FinalBoss : EnemyBase
         if (player == null) return;
 
         // 🎯 หาทิศ player
-        Vector3 dir = (player.position - transform.position).normalized;
+        Vector3 dir =
+            (player.position - transform.position)
+            .normalized;
+
         dir.y = 0;
 
         // 👀 หันหา player
         transform.forward = dir;
 
         // 📏 ระยะห่าง
-        float distance = Vector3.Distance(
-            transform.position,
-            player.position
-        );
+        float distance =
+            Vector3.Distance(
+                transform.position,
+                player.position
+            );
 
         // 👣 เดินเข้าหา player
         if (!isAttacking && distance > attackRange)
         {
-            transform.position += dir * moveSpeed * Time.deltaTime;
+            transform.position +=
+                dir *
+                moveSpeed *
+                Time.deltaTime;
+
+            // 🎬 วิ่ง
+            if (animator != null)
+            {
+                animator.SetBool(
+                    "isRunning",
+                    true
+                );
+            }
+        }
+        else
+        {
+            // 🛑 หยุดเดิน
+            if (animator != null)
+            {
+                animator.SetBool(
+                    "isRunning",
+                    false
+                );
+            }
         }
 
         // ⚔ เข้า range แล้วค่อยโจมตี
-        if (!isAttacking && canAttack && distance <= attackRange)
+        if (
+            !isAttacking &&
+            canAttack &&
+            distance <= attackRange
+        )
         {
             StartCoroutine(AttackPattern());
         }
@@ -55,49 +86,67 @@ public class FinalBoss : EnemyBase
         isAttacking = true;
 
         // 🎲 สุ่มสกิล
-        int attack = Random.Range(0, 3);
+        int attack =
+            Random.Range(0, 3);
 
         switch (attack)
         {
             case 0:
-                yield return StartCoroutine(SlashAttack());
+                yield return StartCoroutine(
+                    SlashAttack()
+                );
                 break;
 
             case 1:
-                yield return StartCoroutine(SpinAttack());
+                yield return StartCoroutine(
+                    SpinAttack()
+                );
                 break;
 
             case 2:
-                yield return StartCoroutine(ShockwaveAttack());
+                yield return StartCoroutine(
+                    ShockwaveAttack()
+                );
                 break;
         }
 
         // 😮‍💨 Recovery
-        yield return new WaitForSeconds(attackCooldown);
+        yield return new WaitForSeconds(
+            attackCooldown
+        );
 
         isAttacking = false;
         canAttack = true;
     }
 
     // =========================================
-    // ⚔ ฟันด้านหน้า
+    // ⚔ Slash Attack
     // =========================================
     IEnumerator SlashAttack()
     {
         Debug.Log("⚔ Slash Attack");
 
-        // 🔴 วงเตือน
-        GameObject warning = Instantiate(
-            warningCirclePrefab,
-            transform.position + transform.forward * 3f,
-            Quaternion.identity
-        );
+        // 🎬 Animation
+        if (animator != null)
+        {
+            animator.SetTrigger("Slash");
+        }
 
-        warning.transform.localScale = new Vector3(
-            4f,
-            0.01f,
-            6f
-        );
+        // 🔴 วงเตือน
+        GameObject warning =
+            Instantiate(
+                warningCirclePrefab,
+                transform.position +
+                transform.forward * 3f,
+                Quaternion.identity
+            );
+
+        warning.transform.localScale =
+            new Vector3(
+                4f,
+                0.01f,
+                6f
+            );
 
         // ⏳ เวลาให้หลบ
         yield return new WaitForSeconds(1f);
@@ -105,15 +154,21 @@ public class FinalBoss : EnemyBase
         // 💥 ดาเมจ
         if (player != null)
         {
-            float distance = Vector3.Distance(
-                transform.position,
-                player.position
-            );
+            float distance =
+                Vector3.Distance(
+                    transform.position,
+                    player.position
+                );
 
             if (distance < 4f)
             {
-                player.GetComponent<PlayerHealth>()
-                    ?.TakeDamage(damage);
+                PlayerHealth ph =
+                    player.GetComponentInParent<PlayerHealth>();
+
+                if (ph != null)
+                {
+                    ph.TakeDamage(damage);
+                }
             }
         }
 
@@ -121,23 +176,31 @@ public class FinalBoss : EnemyBase
     }
 
     // =========================================
-    // 🌪 หมุนรอบตัว
+    // 🌪 Spin Attack
     // =========================================
     IEnumerator SpinAttack()
     {
         Debug.Log("🌪 Spin Attack");
 
-        GameObject warning = Instantiate(
-            warningCirclePrefab,
-            transform.position,
-            Quaternion.identity
-        );
+        // 🎬 Animation
+        if (animator != null)
+        {
+            animator.SetTrigger("Spin");
+        }
 
-        warning.transform.localScale = new Vector3(
-            8f,
-            0.01f,
-            8f
-        );
+        GameObject warning =
+            Instantiate(
+                warningCirclePrefab,
+                transform.position,
+                Quaternion.identity
+            );
+
+        warning.transform.localScale =
+            new Vector3(
+                8f,
+                0.01f,
+                8f
+            );
 
         yield return new WaitForSeconds(1f);
 
@@ -148,25 +211,34 @@ public class FinalBoss : EnemyBase
         {
             // 🌪 หมุน
             transform.Rotate(
-                Vector3.up * 720 * Time.deltaTime
+                Vector3.up *
+                720 *
+                Time.deltaTime
             );
 
             // 💥 ดาเมจต่อเนื่อง
             if (player != null)
             {
-                float distance = Vector3.Distance(
-                    transform.position,
-                    player.position
-                );
+                float distance =
+                    Vector3.Distance(
+                        transform.position,
+                        player.position
+                    );
 
                 if (distance < 4f)
                 {
-                    player.GetComponent<PlayerHealth>()
-                        ?.TakeDamage(1);
+                    PlayerHealth ph =
+                        player.GetComponentInParent<PlayerHealth>();
+
+                    if (ph != null)
+                    {
+                        ph.TakeDamage(1);
+                    }
                 }
             }
 
             timer += Time.deltaTime;
+
             yield return null;
         }
 
@@ -180,31 +252,47 @@ public class FinalBoss : EnemyBase
     {
         Debug.Log("💥 Shockwave");
 
-        GameObject warning = Instantiate(
-            warningCirclePrefab,
-            transform.position,
-            Quaternion.identity
-        );
+        // 🎬 Animation
+        if (animator != null)
+        {
+            animator.SetTrigger("Shockwave");
+        }
 
-        warning.transform.localScale = new Vector3(
-            12f,
-            0.01f,
-            12f
-        );
+        GameObject warning =
+            Instantiate(
+                warningCirclePrefab,
+                transform.position,
+                Quaternion.identity
+            );
+
+        warning.transform.localScale =
+            new Vector3(
+                12f,
+                0.01f,
+                12f
+            );
 
         yield return new WaitForSeconds(1.5f);
 
         if (player != null)
         {
-            float distance = Vector3.Distance(
-                transform.position,
-                player.position
-            );
+            float distance =
+                Vector3.Distance(
+                    transform.position,
+                    player.position
+                );
 
             if (distance < 6f)
             {
-                player.GetComponent<PlayerHealth>()
-                    ?.TakeDamage(damage + 10);
+                PlayerHealth ph =
+                    player.GetComponentInParent<PlayerHealth>();
+
+                if (ph != null)
+                {
+                    ph.TakeDamage(
+                        damage + 10
+                    );
+                }
             }
         }
 

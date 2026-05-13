@@ -7,28 +7,31 @@ public class EnemyBase : MonoBehaviour
     public int maxHP = 30;
     protected int currentHP;
 
-    protected Transform player; // อ้างอิง Player
+    protected Transform player;
 
-    public Action onDeath; // แจ้งตอนตาย (ใช้กับ Wave)
+    public Action onDeath;
+
+    protected Animator animator;
 
     protected virtual void Start()
     {
         currentHP = maxHP;
 
-        // หา Player จาก Tag
-        GameObject playerObj = GameObject.FindWithTag("Player");
+        GameObject playerObj =
+            GameObject.FindWithTag("Player");
+
         if (playerObj != null)
         {
             player = playerObj.transform;
         }
+
+        animator =
+            GetComponentInChildren<Animator>();
     }
 
-    // รับดาเมจ
     public virtual void TakeDamage(int dmg)
     {
         currentHP -= dmg;
-
-        Debug.Log(gameObject.name + " HP: " + currentHP);
 
         if (currentHP <= 0)
         {
@@ -36,10 +39,13 @@ public class EnemyBase : MonoBehaviour
         }
     }
 
-    // ตาย
     protected virtual void Die()
     {
-        onDeath?.Invoke(); // แจ้ง WaveController
-        Destroy(gameObject);
+        if (animator != null)
+        {
+            animator.SetTrigger("Die");
+        }
+
+        Destroy(gameObject, 2f);
     }
 }

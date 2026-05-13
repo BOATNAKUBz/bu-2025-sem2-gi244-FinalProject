@@ -1,32 +1,30 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyBullet : MonoBehaviour
 {
-    public float lifeTime = 3f;
     public int damage = 10;
+    public float lifeTime = 3f;
 
     void Start()
     {
         Destroy(gameObject, lifeTime);
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnCollisionEnter(Collision collision)
     {
-        if (other.CompareTag("Player"))
+        Debug.Log("HIT : " + collision.collider.name);
+
+        PlayerHealth ph =
+            collision.collider
+            .GetComponentInParent<PlayerHealth>();
+
+        if (ph != null)
         {
-            PlayerHealth ph = other.GetComponent<PlayerHealth>();
+            ph.TakeDamage(damage);
 
-            if (ph != null)
-            {
-                ph.TakeDamage(damage);
-            }
-
-            Destroy(gameObject);
+            Debug.Log("PLAYER DAMAGED");
         }
 
-        if (other.CompareTag("Wall"))
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 }

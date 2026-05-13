@@ -5,24 +5,16 @@ public class EnemyShooterBase : EnemyBase
 {
     [Header("Movement")]
     public float moveSpeed = 3f;
-    public float stopDistance = 8f;   // ระยะหยุดเพื่อยิง
-    public float retreatDistance = 3f; // ระยะถอย (กันชน)
+    public float stopDistance = 8f;
+    public float retreatDistance = 3f;
 
     [Header("Attack")]
     public float fireRate = 1.2f;
     public GameObject bulletPrefab;
-    public Transform firePoint;
-    public float bulletSpeed = 15f;
+    public float bulletSpeed = 10f;
     public int damage = 10;
 
     private bool canShoot = true;
-    private Rigidbody rb;
-
-    protected override void Start()
-    {
-        base.Start();
-        rb = GetComponent<Rigidbody>();
-    }
 
     void Update()
     {
@@ -34,29 +26,65 @@ public class EnemyShooterBase : EnemyBase
 
     void HandleMovement()
     {
-        float dist = Vector3.Distance(transform.position, player.position);
+        float dist =
+            Vector3.Distance(
+                transform.position,
+                player.position
+            );
 
-        Vector3 dir = (player.position - transform.position);
+        Vector3 dir =
+            (player.position - transform.position)
+            .normalized;
+
         dir.y = 0;
-        dir.Normalize();
 
-        // 🔴 ถ้าใกล้เกินไป → ถอย
+        // 🔴 ถอย
         if (dist < retreatDistance)
         {
-            rb.velocity = -dir * moveSpeed;
-        }
-        // 🟡 ถ้าไกลเกินระยะยิง → เดินเข้าไป
-        else if (dist > stopDistance)
-        {
-            rb.velocity = dir * moveSpeed;
-        }
-        // 🟢 อยู่ในระยะยิง → หยุด
-        else
-        {
-            rb.velocity = Vector3.zero;
+            transform.position +=
+                -dir *
+                moveSpeed *
+                Time.deltaTime;
+
+            if (animator != null)
+            {
+                animator.SetBool(
+                    "isRunning",
+                    true
+                );
+            }
         }
 
-        // หันหน้าหาผู้เล่น
+        // 🟡 เดินเข้า
+        else if (dist > stopDistance)
+        {
+            transform.position +=
+                dir *
+                moveSpeed *
+                Time.deltaTime;
+
+            if (animator != null)
+            {
+                animator.SetBool(
+                    "isRunning",
+                    true
+                );
+            }
+        }
+
+        // 🟢 หยุดยิง
+        else
+        {
+            if (animator != null)
+            {
+                animator.SetBool(
+                    "isRunning",
+                    false
+                );
+            }
+        }
+
+        // 🎯 หันหน้า
         if (dir != Vector3.zero)
         {
             transform.forward = dir;
@@ -65,7 +93,11 @@ public class EnemyShooterBase : EnemyBase
 
     void HandleAttack()
     {
-        float dist = Vector3.Distance(transform.position, player.position);
+        float dist =
+            Vector3.Distance(
+                transform.position,
+                player.position
+            );
 
         if (dist <= stopDistance && canShoot)
         {
@@ -77,13 +109,41 @@ public class EnemyShooterBase : EnemyBase
     {
         canShoot = false;
 
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+        // 🎬 Animation ยิง
+        if (animator != null)
+        {
+            animator.SetTrigger("Shoot");
+        }
 
-        Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
+        // 🎯 จุดยิง
+        Vector3 shootPos =
+            transform.position +
+            transform.forward * 1.2f +
+            Vector3.up * 1.2f;
 
-        Vector3 dir = (player.position - firePoint.position).normalized;
+        // 🎯 ทิศยิง
+        Vector3 dir =
+            (player.position + Vector3.up)
+            - shootPos;
 
-        bulletRb.velocity = dir * bulletSpeed;
+        dir.Normalize();
+
+        // 🔥 สร้างกระสุน
+        GameObject bullet =
+            Instantiate(
+                bulletPrefab,
+                shootPos,
+                Quaternion.LookRotation(dir)
+            );
+
+        Rigidbody rb =
+            bullet.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.velocity =
+                dir * bulletSpeed;
+        }
 
         yield return new WaitForSeconds(fireRate);
 

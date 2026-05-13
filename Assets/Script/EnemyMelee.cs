@@ -5,11 +5,11 @@ public class EnemyMelee : EnemyBase
 {
     [Header("Movement")]
     public float speed = 3f;
-    public float stopDistance = 1.5f;
+    public float stopDistance = 2f;
 
     [Header("Attack")]
     public int damage = 10;
-    public float attackCooldown = 1f;
+    public float attackCooldown = 1.5f;
 
     private bool canAttack = true;
 
@@ -17,27 +17,51 @@ public class EnemyMelee : EnemyBase
     {
         if (player == null) return;
 
-        float distance = Vector3.Distance(transform.position, player.position);
+        float distance =
+            Vector3.Distance(
+                transform.position,
+                player.position
+            );
 
-        // หาทิศไปหา Player
-        Vector3 dir = (player.position - transform.position).normalized;
+        Vector3 dir =
+            (player.position - transform.position)
+            .normalized;
+
         dir.y = 0;
 
-        // เดินเข้าไป
+        // 👣 เดินหา player
         if (distance > stopDistance)
         {
-            transform.position += dir * speed * Time.deltaTime;
+            transform.position +=
+                dir *
+                speed *
+                Time.deltaTime;
+
+            if (animator != null)
+            {
+                animator.SetBool(
+                    "isRunning",
+                    true
+                );
+            }
         }
         else
         {
-            // อยู่ใกล้ → ตี
+            if (animator != null)
+            {
+                animator.SetBool(
+                    "isRunning",
+                    false
+                );
+            }
+
             if (canAttack)
             {
                 StartCoroutine(Attack());
             }
         }
 
-        // หันหน้าหา Player
+        // 🎯 หันหน้า
         transform.forward = dir;
     }
 
@@ -45,19 +69,39 @@ public class EnemyMelee : EnemyBase
     {
         canAttack = false;
 
-        // เช็คระยะก่อนตี
-        if (player != null &&
-            Vector3.Distance(transform.position, player.position) <= stopDistance)
+        // 🎬 animation ตี
+        if (animator != null)
         {
-            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
+            animator.SetTrigger("Attack");
+        }
+
+        // รอก่อนตีโดน
+        yield return new WaitForSeconds(0.5f);
+
+        if (player != null)
+        {
+            float dist =
+                Vector3.Distance(
+                    transform.position,
+                    player.position
+                );
+
+            if (dist <= stopDistance + 0.5f)
             {
-                playerHealth.TakeDamage(damage);
-                Debug.Log("Enemy hit player!");
+                PlayerHealth ph =
+                    player.GetComponent<PlayerHealth>();
+
+                if (ph != null)
+                {
+                    ph.TakeDamage(damage);
+                }
             }
         }
 
-        yield return new WaitForSeconds(attackCooldown);
+        yield return new WaitForSeconds(
+            attackCooldown
+        );
+
         canAttack = true;
     }
 }

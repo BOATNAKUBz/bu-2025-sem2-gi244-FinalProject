@@ -21,10 +21,18 @@ public class WaveController : MonoBehaviour
     // =========================================
     public IEnumerator SpawnWave(Wave wave)
     {
-        // spawn ตามลำดับ
+        if (wave == null || wave.enemySequence == null)
+        {
+            Debug.LogError("Wave data missing!");
+            yield break;
+        }
+
         for (int i = 0; i < wave.enemySequence.Length; i++)
         {
-            SpawnEnemy(wave.enemySequence[i]);
+            if (wave.enemySequence[i] != null)
+            {
+                SpawnEnemy(wave.enemySequence[i]);
+            }
 
             yield return new WaitForSeconds(
                 wave.spawnInterval
