@@ -2,28 +2,94 @@
 
 public class EnemyBullet : MonoBehaviour
 {
-    public int damage = 10;
+    [Header("Bullet")]
+    public float speed = 15f;
     public float lifeTime = 3f;
 
-    void Start()
+    [Header("Damage")]
+    public int damage = 10;
+
+    private Rigidbody rb;
+
+    // ====================================
+    // 🧠 เริ่มต้น
+    // ====================================
+    void Awake()
     {
-        Destroy(gameObject, lifeTime);
+        rb = GetComponent<Rigidbody>();
+
+        // 🔥 สำคัญมาก
+        rb.useGravity = false;
+
+        rb.collisionDetectionMode =
+            CollisionDetectionMode.ContinuousDynamic;
+
+        rb.interpolation =
+            RigidbodyInterpolation.Interpolate;
     }
 
-    void OnCollisionEnter(Collision collision)
+    // ====================================
+    // 🚀 เปิดใช้งาน
+    // ====================================
+    void OnEnable()
     {
-        Debug.Log("HIT : " + collision.collider.name);
+        CancelInvoke();
 
-        PlayerHealth ph =
-            collision.collider
-            .GetComponentInParent<PlayerHealth>();
+        Invoke(
+            nameof(DestroyBullet),
+            lifeTime
+        );
 
-        if (ph != null)
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    // ====================================
+    // 🚀 ยิง
+    // ====================================
+    public void Fire(Vector3 dir)
+    {
+        rb.velocity =
+            dir.normalized * speed;
+    }
+
+    // ====================================
+    // 💥 ชน
+    // ====================================
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("HIT : " + other.name);
+
+        // 🎯 โดน Player
+        if (other.CompareTag("Player"))
         {
-            ph.TakeDamage(damage);
+            PlayerHealth ph =
+                other.GetComponent<PlayerHealth>();
 
-            Debug.Log("PLAYER DAMAGED");
+            if (ph != null)
+            {
+                ph.TakeDamage(damage);
+
+                Debug.Log("PLAYER DAMAGED");
+            }
+
+            DestroyBullet();
+            return;
         }
+
+        // 🧱 ชนกำแพง
+        if (other.CompareTag("Wall"))
+        {
+            DestroyBullet();
+        }
+    }
+
+    // ====================================
+    // ❌ ลบกระสุน
+    // ====================================
+    void DestroyBullet()
+    {
+        CancelInvoke();
 
         Destroy(gameObject);
     }

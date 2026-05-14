@@ -14,42 +14,58 @@ public class EnemyMelee : EnemyBase
     private bool canAttack = true;
 
     private Rigidbody rb;
+    private Animator animator;
 
+    // ====================================
+    // 🚀 Start
+    // ====================================
     protected override void Start()
     {
         base.Start();
 
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+
+        // 🔥 กันล้ม
+        if (rb != null)
+        {
+            rb.freezeRotation = true;
+        }
     }
 
+    // ====================================
+    // 🔄 Update
+    // ====================================
     void Update()
     {
         if (player == null)
             return;
 
+        // 📏 ระยะห่าง
         float distance =
             Vector3.Distance(
                 transform.position,
                 player.position
             );
 
+        // 🎯 หาทิศ
         Vector3 dir =
             (player.position - transform.position)
             .normalized;
 
         dir.y = 0;
 
-        // 👣 เดินหา player
+        // ====================================
+        // 👣 เดินหา Player
+        // ====================================
         if (distance > stopDistance)
         {
-            rb.MovePosition(
-                transform.position +
+            transform.position +=
                 dir *
                 speed *
-                Time.deltaTime
-            );
+                Time.deltaTime;
 
-            // 🎬 วิ่ง
+            // 🎬 Animation วิ่ง
             if (animator != null)
             {
                 animator.SetBool(
@@ -69,34 +85,39 @@ public class EnemyMelee : EnemyBase
                 );
             }
 
-            // 👊 ตี
+            // 👊 โจมตี
             if (canAttack)
             {
                 StartCoroutine(Attack());
             }
         }
 
-        // 🎯 หันหน้า
+        // ====================================
+        // 🎯 หันหน้าเข้าหา Player
+        // ====================================
         if (dir != Vector3.zero)
         {
             transform.forward = dir;
         }
     }
 
+    // ====================================
+    // ⚔ Attack
+    // ====================================
     IEnumerator Attack()
     {
         canAttack = false;
 
-        // 🎬 Animation ตี
+        Debug.Log("ATTACKING");
+
+        // 🎬 Animation
         if (animator != null)
         {
             animator.SetTrigger("Attack");
         }
 
-        // ⏳ รอจังหวะตี
-        yield return new WaitForSeconds(
-            0.5f
-        );
+        // ⏳ delay ก่อนโดนตี
+        yield return new WaitForSeconds(0.5f);
 
         if (player != null)
         {
@@ -106,24 +127,33 @@ public class EnemyMelee : EnemyBase
                     player.position
                 );
 
-            // 💥 เช็คระยะตี
-            if (dist <= stopDistance + 0.5f)
+            // 📏 เช็คระยะอีกที
+            if (dist <= stopDistance + 1f)
             {
+                // 🔥 หา PlayerHealth
                 PlayerHealth ph =
                     player.GetComponentInParent<PlayerHealth>();
+
+                // ถ้าไม่มี ลองหาอีก
+                if (ph == null)
+                {
+                    ph =
+                        player.GetComponentInChildren<PlayerHealth>();
+                }
 
                 if (ph != null)
                 {
                     ph.TakeDamage(damage);
 
-                    Debug.Log(
-                        "MELEE HIT PLAYER"
-                    );
+                    Debug.Log("MELEE HIT PLAYER");
+                }
+                else
+                {
+                    Debug.Log("NO PLAYER HEALTH");
                 }
             }
         }
 
-        // 😮‍💨 cooldown
         yield return new WaitForSeconds(
             attackCooldown
         );
