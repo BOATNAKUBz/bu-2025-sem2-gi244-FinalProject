@@ -6,14 +6,19 @@ public class WinSceneUI : MonoBehaviour
     // ➡ ไปด่านต่อไป
     public void NextStage()
     {
-        Scene currentScene =
-            SceneManager.GetActiveScene();
+        // 📌 ด่านล่าสุดที่เล่น
+        int currentStage =
+            PlayerPrefs.GetInt(
+                "CurrentStage"
+            );
 
-        // Stage1 → Stage2
-        if (currentScene.name == "YouWinScene")
-        {
-            SceneManager.LoadScene("Stage2");
-        }
+        // 📌 ด่านต่อไป
+        int nextStage =
+            currentStage + 1;
+
+        SceneManager.LoadScene(
+            nextStage
+        );
     }
 
     // 🏠 กลับเมนู

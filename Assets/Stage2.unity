@@ -8984,12 +8984,6 @@ MonoBehaviour:
     - {fileID: 21373143062104791, guid: 1545f5313c8872f4b8df0e72b030da71, type: 3}
     spawnInterval: 3
     waveInterval: 2
-  - enemySequence:
-    - {fileID: 21373143062104791, guid: 1545f5313c8872f4b8df0e72b030da71, type: 3}
-    - {fileID: 3262120458940110265, guid: b667546412dbf5a40945fed0ca208161, type: 3}
-    - {fileID: 21373143062104791, guid: 1545f5313c8872f4b8df0e72b030da71, type: 3}
-    spawnInterval: 0
-    waveInterval: 0
   waveController: {fileID: 1535171162}
   stageComplete: {fileID: 140804851}
 --- !u!114 &1535171162
