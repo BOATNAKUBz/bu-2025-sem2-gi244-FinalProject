@@ -29,5 +29,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/YouLoseScene.unity
     guid: 5f267bccc84747b4fbd6bc5c08843b67
+  - enabled: 1
+    path: Assets/AllStageClearScene.unity
+    guid: 405073989a30edb49b9f1c2a6eb97987
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

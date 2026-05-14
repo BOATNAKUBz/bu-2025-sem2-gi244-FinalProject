@@ -11833,6 +11833,18 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4200544152974151871, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: hurtSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6d142303e7d99f541b2179c6237a2f15, type: 3}
+    - target: {fileID: 4200544152974151871, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: e8cd2b9d63f813144947e37cb76ae47e, type: 3}
+    - target: {fileID: 4200544152974151871, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 2120230027}
+    - target: {fileID: 4200544152974151871, guid: 81ef18316eacc064c9303c2247531634, type: 3}
       propertyPath: currentHealth
       value: 0
       objectReference: {fileID: 0}
@@ -11840,6 +11852,14 @@ PrefabInstance:
       propertyPath: gameOverPanel
       value: 
       objectReference: {fileID: 1454769097}
+    - target: {fileID: 4368871266894383251, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: dashSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 9dabc83a86c37f14cbc7179f9cf52b4e, type: 3}
+    - target: {fileID: 4368871266894383251, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 2120230027}
     - target: {fileID: 4467504572873920296, guid: 81ef18316eacc064c9303c2247531634, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -11984,6 +12004,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 2120230027}
+    - target: {fileID: 7134634336473169603, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: bombShootSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 4368bbcad6999dc41b8274df521f9eef, type: 3}
     - target: {fileID: 7195216766206868216, guid: 81ef18316eacc064c9303c2247531634, type: 3}
       propertyPath: m_Layer
       value: 9

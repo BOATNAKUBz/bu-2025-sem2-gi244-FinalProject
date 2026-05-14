@@ -43,8 +43,8 @@ public class StageComplete : MonoBehaviour
             currentScene
         );
 
-        // 🔥 ถ้าเป็นด่านสุดท้าย
-        if (currentScene == 3)
+        // 🔥 ถ้าเป็น Stage3
+        if (currentScene == 5)
         {
             SceneManager.LoadScene(
                 "AllStageClearScene"

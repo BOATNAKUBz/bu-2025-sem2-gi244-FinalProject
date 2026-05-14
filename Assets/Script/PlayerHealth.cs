@@ -7,6 +7,12 @@ public class PlayerHealth : MonoBehaviour
     public float maxHealth = 100f;
     public float currentHealth;
 
+    [Header("Sound")]
+    public AudioSource audioSource;
+
+    public AudioClip hurtSound;
+    public AudioClip deathSound;
+
     private bool isDead = false;
 
     private Animator animator;
@@ -28,6 +34,15 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(float damage)
     {
         if (isDead) return;
+
+        // 🔊 เสียงโดนตี
+        if (audioSource != null &&
+            hurtSound != null)
+        {
+            audioSource.PlayOneShot(
+                hurtSound
+            );
+        }
 
         currentHealth -= damage;
 
@@ -57,6 +72,15 @@ public class PlayerHealth : MonoBehaviour
 
         Debug.Log("PLAYER DEAD");
 
+        // 🔊 เล่นเสียงตาย
+        if (audioSource != null &&
+            deathSound != null)
+        {
+            audioSource.PlayOneShot(
+                deathSound
+            );
+        }
+
         // 🎬 Animation ตาย
         if (animator != null)
         {
@@ -81,7 +105,15 @@ public class PlayerHealth : MonoBehaviour
             ps.enabled = false;
         }
 
-        // 🔥 เรียกหน้าแพ้
+        // ⏳ รอก่อนเข้าแพ้
+        Invoke(nameof(DelayLose), 2f);
+    }
+
+    // =================================
+    // 💀 เข้า You Lose
+    // =================================
+    void DelayLose()
+    {
         StageComplete stageComplete =
             FindObjectOfType<StageComplete>();
 

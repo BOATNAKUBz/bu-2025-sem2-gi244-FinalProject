@@ -3844,7 +3844,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: cd74c86483ebead41a2a266db6927d5c, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.287
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -10557,9 +10557,29 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4200544152974151871, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: hurtSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6d142303e7d99f541b2179c6237a2f15, type: 3}
+    - target: {fileID: 4200544152974151871, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: e8cd2b9d63f813144947e37cb76ae47e, type: 3}
+    - target: {fileID: 4200544152974151871, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 1661605858}
+    - target: {fileID: 4200544152974151871, guid: 81ef18316eacc064c9303c2247531634, type: 3}
       propertyPath: currentHealth
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4368871266894383251, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: dashSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 9dabc83a86c37f14cbc7179f9cf52b4e, type: 3}
+    - target: {fileID: 4368871266894383251, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 1661605858}
     - target: {fileID: 4467504572873920296, guid: 81ef18316eacc064c9303c2247531634, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -10704,6 +10724,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 1661605858}
+    - target: {fileID: 7134634336473169603, guid: 81ef18316eacc064c9303c2247531634, type: 3}
+      propertyPath: bombShootSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 4368bbcad6999dc41b8274df521f9eef, type: 3}
     - target: {fileID: 7195216766206868216, guid: 81ef18316eacc064c9303c2247531634, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -11250,36 +11274,6 @@ MonoBehaviour:
     - {fileID: 395641132616442020, guid: 0b4f3d084c57e6949b3185376b85f335, type: 3}
     - {fileID: 395641132616442020, guid: 0b4f3d084c57e6949b3185376b85f335, type: 3}
     spawnInterval: 2
-    waveInterval: 0
-  - enemySequence:
-    - {fileID: 656452430765325718, guid: 138a67806c9b31d4c95844c4b04f4128, type: 3}
-    - {fileID: 656452430765325718, guid: 138a67806c9b31d4c95844c4b04f4128, type: 3}
-    - {fileID: 3262120458940110265, guid: b667546412dbf5a40945fed0ca208161, type: 3}
-    - {fileID: 3262120458940110265, guid: b667546412dbf5a40945fed0ca208161, type: 3}
-    spawnInterval: 2
-    waveInterval: 0
-  - enemySequence:
-    - {fileID: 395641132616442020, guid: 0b4f3d084c57e6949b3185376b85f335, type: 3}
-    - {fileID: 395641132616442020, guid: 0b4f3d084c57e6949b3185376b85f335, type: 3}
-    - {fileID: 21373143062104791, guid: 1545f5313c8872f4b8df0e72b030da71, type: 3}
-    - {fileID: 21373143062104791, guid: 1545f5313c8872f4b8df0e72b030da71, type: 3}
-    spawnInterval: 3
-    waveInterval: 0
-  - enemySequence:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    spawnInterval: 3
-    waveInterval: 0
-  - enemySequence:
-    - {fileID: 21373143062104791, guid: 1545f5313c8872f4b8df0e72b030da71, type: 3}
-    - {fileID: 21373143062104791, guid: 1545f5313c8872f4b8df0e72b030da71, type: 3}
-    - {fileID: 21373143062104791, guid: 1545f5313c8872f4b8df0e72b030da71, type: 3}
-    - {fileID: 21373143062104791, guid: 1545f5313c8872f4b8df0e72b030da71, type: 3}
-    - {fileID: 1510475235250930482, guid: 332f9eb7037b72045a8badc4a22dc784, type: 3}
-    spawnInterval: 3
     waveInterval: 0
   waveController: {fileID: 1715135538}
   stageComplete: {fileID: 816509487}

@@ -39,7 +39,9 @@ public class PlayerShooting : MonoBehaviour
     // =========================
     [Header("Sound")]
     public AudioSource audioSource;
+
     public AudioClip shootSound;
+    public AudioClip bombShootSound;
 
     private bool canShoot = true;
     private bool canBombShoot = true;
@@ -93,7 +95,7 @@ public class PlayerShooting : MonoBehaviour
     {
         currentAmmo--;
 
-        // 🔊 เล่นเสียงยิง
+        // 🔊 เสียงยิงปกติ
         if (audioSource != null
             && shootSound != null)
         {
@@ -154,6 +156,15 @@ public class PlayerShooting : MonoBehaviour
     void ShootBomb()
     {
         currentBombAmmo--;
+
+        // 🔊 เสียงยิง Bomb
+        if (audioSource != null
+            && bombShootSound != null)
+        {
+            audioSource.PlayOneShot(
+                bombShootSound
+            );
+        }
 
         GameObject bombObj = Instantiate(
             bombBulletPrefab,

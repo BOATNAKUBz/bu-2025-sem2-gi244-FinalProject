@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveInput;
     private Animator animator;
 
+    // =========================
+    // ⚡ Dash
+    // =========================
     [Header("Dash Settings")]
     public float dashSpeed = 20f;
     public float dashTime = 0.2f;
@@ -19,38 +22,69 @@ public class PlayerController : MonoBehaviour
     private bool isDashing;
     private bool canDash = true;
 
+    // =========================
+    // 🔊 Sound
+    // =========================
+    [Header("Sound")]
+    public AudioSource audioSource;
+    public AudioClip dashSound;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
         mainCamera = Camera.main;
 
-        // หา Animator จากโมเดลลูก
-        animator = GetComponentInChildren<Animator>();
+        // 🎬 หา Animator
+        animator =
+            GetComponentInChildren<Animator>();
     }
 
     void Update()
     {
-        // ถ้า Dash อยู่ ไม่รับ input
+        // ❌ ถ้า Dash อยู่
         if (isDashing) return;
 
-        // รับ input เดิน
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveZ = Input.GetAxisRaw("Vertical");
+        // =========================
+        // 🎮 Movement
+        // =========================
+        float moveX =
+            Input.GetAxisRaw(
+                "Horizontal"
+            );
 
-        moveInput = new Vector3(moveX, 0f, moveZ).normalized;
+        float moveZ =
+            Input.GetAxisRaw(
+                "Vertical"
+            );
 
-        // ส่งค่าไป Animator
+        moveInput =
+            new Vector3(
+                moveX,
+                0f,
+                moveZ
+            ).normalized;
+
+        // 🎬 Animation
         if (animator != null)
         {
-            animator.SetBool("isRunning", moveInput != Vector3.zero);
+            animator.SetBool(
+                "isRunning",
+                moveInput != Vector3.zero
+            );
         }
 
-        // หันตามเมาส์
+        // 🖱 หันตามเมาส์
         RotateToMouse();
 
-        // Dash
-        if (Input.GetKeyDown(KeyCode.LeftShift) &&
-            canDash &&
+        // =========================
+        // ⚡ Dash
+        // =========================
+        if (Input.GetKeyDown(
+                KeyCode.LeftShift)
+            &&
+            canDash
+            &&
             moveInput != Vector3.zero)
         {
             StartCoroutine(Dash());
@@ -63,17 +97,28 @@ public class PlayerController : MonoBehaviour
 
         rb.MovePosition(
             rb.position +
-            moveInput * moveSpeed * Time.fixedDeltaTime
+            moveInput *
+            moveSpeed *
+            Time.fixedDeltaTime
         );
     }
 
+    // =========================
+    // 🖱 Rotate
+    // =========================
     void RotateToMouse()
     {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        Ray ray =
+            mainCamera.ScreenPointToRay(
+                Input.mousePosition
+            );
 
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(
+                ray,
+                out RaycastHit hit))
         {
-            Vector3 lookPoint = hit.point;
+            Vector3 lookPoint =
+                hit.point;
 
             transform.LookAt(
                 new Vector3(
@@ -85,19 +130,38 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // =========================
+    // ⚡ Dash
+    // =========================
     IEnumerator Dash()
     {
         canDash = false;
         isDashing = true;
 
-        rb.velocity = moveInput * dashSpeed;
+        // 🔊 เสียง Dash
+        if (audioSource != null
+            && dashSound != null)
+        {
+            audioSource.PlayOneShot(
+                dashSound
+            );
+        }
 
-        yield return new WaitForSeconds(dashTime);
+        rb.velocity =
+            moveInput * dashSpeed;
+
+        yield return new WaitForSeconds(
+            dashTime
+        );
 
         isDashing = false;
-        rb.velocity = Vector3.zero;
 
-        yield return new WaitForSeconds(dashCooldown);
+        rb.velocity =
+            Vector3.zero;
+
+        yield return new WaitForSeconds(
+            dashCooldown
+        );
 
         canDash = true;
     }
