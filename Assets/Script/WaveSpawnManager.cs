@@ -14,7 +14,6 @@ public class WaveSpawnManager : MonoBehaviour
 
     private int currentWave = 0;
 
-    // 📌 เอาไว้โชว์ UI
     public int CurrentWave
     {
         get { return currentWave + 1; }
@@ -33,23 +32,22 @@ public class WaveSpawnManager : MonoBehaviour
                 waveConfigurations[currentWave];
 
             Debug.Log(
-                "🌊 Start Wave: " +
+                "START WAVE " +
                 (currentWave + 1)
             );
 
-            // 👾 Spawn wave
+            // Spawn
             yield return StartCoroutine(
                 waveController.SpawnWave(wave)
             );
 
-            // ⏳ รอศัตรูตายหมด
+            // รอศัตรูตายหมด
             yield return new WaitUntil(
                 () => waveController.IsAllEnemiesDead()
             );
 
-            Debug.Log("✅ Wave Complete!");
+            Debug.Log("WAVE COMPLETE");
 
-            // ⏳ พักก่อน wave ใหม่
             yield return new WaitForSeconds(
                 wave.waveInterval
             );
@@ -57,23 +55,15 @@ public class WaveSpawnManager : MonoBehaviour
             currentWave++;
         }
 
-        // =================================
-        // 🎉 ผ่านทุก Wave
-        // =================================
-        Debug.Log("🎉 ALL WAVES COMPLETED!");
+        // =====================
+        // 🎉 WIN
+        // =====================
 
-        // 🔥 YOU WIN
+        Debug.Log("ALL WAVES COMPLETED");
+
         if (stageComplete != null)
         {
-            Debug.Log("WIN STAGE");
-
             stageComplete.WinStage();
-        }
-        else
-        {
-            Debug.LogError(
-                "StageComplete is NULL!"
-            );
         }
     }
 }

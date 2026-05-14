@@ -3,10 +3,9 @@ using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
+    [Header("Health")]
     public float maxHealth = 100f;
     public float currentHealth;
-
-    public GameObject gameOverPanel;
 
     private bool isDead = false;
 
@@ -16,12 +15,16 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth = maxHealth;
 
-        animator = GetComponentInChildren<Animator>();
+        animator =
+            GetComponentInChildren<Animator>();
 
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(false);
+        // 🔥 กันเวลาเกมค้าง
+        Time.timeScale = 1f;
     }
 
+    // =================================
+    // 💥 โดนโจมตี
+    // =================================
     public void TakeDamage(float damage)
     {
         if (isDead) return;
@@ -29,45 +32,62 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damage;
 
         if (currentHealth < 0)
+        {
             currentHealth = 0;
+        }
 
-        Debug.Log("โอ๊ย! โดนโจมตี! เลือดเหลือ: " + currentHealth);
+        Debug.Log(
+            "เลือดเหลือ: " +
+            currentHealth
+        );
 
+        // ☠ ตาย
         if (currentHealth <= 0)
         {
             Die();
         }
     }
 
+    // =================================
+    // ☠ PLAYER DEAD
+    // =================================
     void Die()
     {
         isDead = true;
 
-        Debug.Log("ตัวละครตายแล้ว...");
+        Debug.Log("PLAYER DEAD");
 
-        // เล่น animation ตาย
+        // 🎬 Animation ตาย
         if (animator != null)
         {
             animator.SetTrigger("Die");
         }
 
-        // ปิดการขยับ
-        GetComponent<PlayerController>().enabled = false;
+        // ❌ ปิดเดิน
+        PlayerController pc =
+            GetComponent<PlayerController>();
 
-        // รอแล้วค่อยขึ้น Game Over
-        Invoke(nameof(ShowGameOver), 2f);
-    }
+        if (pc != null)
+        {
+            pc.enabled = false;
+        }
 
-    void ShowGameOver()
-    {
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(true);
-    }
+        // ❌ ปิดยิง
+        PlayerShooting ps =
+            GetComponent<PlayerShooting>();
 
-    public void RestartGame()
-    {
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().buildIndex
-        );
+        if (ps != null)
+        {
+            ps.enabled = false;
+        }
+
+        // 🔥 เรียกหน้าแพ้
+        StageComplete stageComplete =
+            FindObjectOfType<StageComplete>();
+
+        if (stageComplete != null)
+        {
+            stageComplete.LoseStage();
+        }
     }
 }
