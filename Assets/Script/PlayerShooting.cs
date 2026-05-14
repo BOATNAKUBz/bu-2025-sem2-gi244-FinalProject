@@ -6,32 +6,40 @@ public class PlayerShooting : MonoBehaviour
     [Header("Fire Point")]
     public Transform firePoint;
 
-  
-    // Normal Bullet
-   
+    // =========================
+    // 🔫 Normal Bullet
+    // =========================
     [Header("Normal Bullet")]
     public GameObject normalBulletPrefab;
     public float normalFireRate = 0.2f;
 
-    
-    // Bomb Bullet
-    
+    // =========================
+    // 💣 Bomb Bullet
+    // =========================
     [Header("Bomb Bullet")]
     public GameObject bombBulletPrefab;
     public float bombFireRate = 1f;
 
-    // Ammo
-   
+    // =========================
+    // 🔋 Ammo
+    // =========================
     [Header("Ammo")]
     public int maxAmmo = 30;
     public int currentAmmo;
 
-
-    // Bomb Ammo
-
+    // =========================
+    // 💣 Bomb Ammo
+    // =========================
     [Header("Bomb Ammo")]
     public int maxBombAmmo = 5;
     public int currentBombAmmo;
+
+    // =========================
+    // 🔊 Sound
+    // =========================
+    [Header("Sound")]
+    public AudioSource audioSource;
+    public AudioClip shootSound;
 
     private bool canShoot = true;
     private bool canBombShoot = true;
@@ -44,25 +52,30 @@ public class PlayerShooting : MonoBehaviour
 
     void Update()
     {
-        // ยิงปกติ
+        // 🔫 ยิงปกติ
         if (Input.GetButton("Fire1")
             && canShoot
             && currentAmmo > 0)
         {
-            StartCoroutine(NormalShootRoutine());
+            StartCoroutine(
+                NormalShootRoutine()
+            );
         }
 
-        // ยิง Bomb
+        // 💣 ยิง Bomb
         if (Input.GetButtonDown("Fire2")
             && canBombShoot
             && currentBombAmmo > 0)
         {
-            StartCoroutine(BombShootRoutine());
+            StartCoroutine(
+                BombShootRoutine()
+            );
         }
     }
 
-    // ยิงปกติ
-   
+    // =========================
+    // 🔫 ยิงปกติ
+    // =========================
     IEnumerator NormalShootRoutine()
     {
         canShoot = false;
@@ -80,12 +93,23 @@ public class PlayerShooting : MonoBehaviour
     {
         currentAmmo--;
 
+        // 🔊 เล่นเสียงยิง
+        if (audioSource != null
+            && shootSound != null)
+        {
+            audioSource.PlayOneShot(
+                shootSound
+            );
+        }
+
         GameObject bulletObj;
 
         if (ProjectileObjectPool.staticinstance != null)
         {
             bulletObj =
-                ProjectileObjectPool.staticinstance.Acquire();
+                ProjectileObjectPool
+                .staticinstance
+                .Acquire();
         }
         else
         {
@@ -105,13 +129,15 @@ public class PlayerShooting : MonoBehaviour
 
         if (bullet != null)
         {
-            bullet.Fire(firePoint.forward);
+            bullet.Fire(
+                firePoint.forward
+            );
         }
     }
 
-
-    // ยิง Bomb
-
+    // =========================
+    // 💣 ยิง Bomb
+    // =========================
     IEnumerator BombShootRoutine()
     {
         canBombShoot = false;
@@ -140,12 +166,15 @@ public class PlayerShooting : MonoBehaviour
 
         if (bomb != null)
         {
-            bomb.Fire(firePoint.forward);
+            bomb.Fire(
+                firePoint.forward
+            );
         }
     }
 
-    // เติม Ammo
-
+    // =========================
+    // 🔋 เติม Ammo
+    // =========================
     public void AddAmmo(int amount)
     {
         currentAmmo += amount;
@@ -156,9 +185,9 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
-   
-    //  เติม Bomb Ammo
-
+    // =========================
+    // 💣 เติม Bomb Ammo
+    // =========================
     public void AddBombAmmo(int amount)
     {
         currentBombAmmo += amount;

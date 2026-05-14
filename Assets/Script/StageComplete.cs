@@ -4,11 +4,28 @@ using UnityEngine.SceneManagement;
 public class StageComplete : MonoBehaviour
 {
     // =========================
+    // 🔊 หยุดเพลง
+    // =========================
+    void StopBGM()
+    {
+        BackgroundMusic bgm =
+            FindObjectOfType<BackgroundMusic>();
+
+        if (bgm != null)
+        {
+            Destroy(bgm.gameObject);
+        }
+    }
+
+    // =========================
     // 🎉 WIN
     // =========================
     public void WinStage()
     {
         Time.timeScale = 1f;
+
+        // 🔊 หยุดเพลง
+        StopBGM();
 
         // 📌 เซฟด่านปัจจุบัน
         int currentScene =
@@ -26,10 +43,19 @@ public class StageComplete : MonoBehaviour
             currentScene
         );
 
-        // ไปหน้า WIN
-        SceneManager.LoadScene(
-            "YouWinScene"
-        );
+        // 🔥 ถ้าเป็นด่านสุดท้าย
+        if (currentScene == 3)
+        {
+            SceneManager.LoadScene(
+                "AllStageClearScene"
+            );
+        }
+        else
+        {
+            SceneManager.LoadScene(
+                "YouWinScene"
+            );
+        }
     }
 
     // =========================
@@ -38,6 +64,9 @@ public class StageComplete : MonoBehaviour
     public void LoseStage()
     {
         Time.timeScale = 1f;
+
+        // 🔊 หยุดเพลง
+        StopBGM();
 
         // 📌 เซฟด่านปัจจุบัน
         int currentScene =

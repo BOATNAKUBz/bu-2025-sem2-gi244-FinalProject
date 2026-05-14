@@ -5,9 +5,12 @@ public class AmmoPickup : MonoBehaviour
     [Header("Ammo")]
     public int ammoAmount = 20;
 
+    [Header("Sound")]
+    public AudioClip pickupSound;
+
     private void OnTriggerEnter(Collider other)
     {
-        // 🎯 เช็ค player
+        // 🎯 เช็ค Player
         if (!other.CompareTag("Player"))
             return;
 
@@ -20,7 +23,7 @@ public class AmmoPickup : MonoBehaviour
             // ➕ เพิ่มกระสุน
             shooting.currentAmmo += ammoAmount;
 
-            // 🔒 กันเกิน max
+            // 🔒 กันกระสุนเกิน
             if (shooting.currentAmmo >
                 shooting.maxAmmo)
             {
@@ -29,8 +32,18 @@ public class AmmoPickup : MonoBehaviour
             }
 
             Debug.Log(
-                "🔫 Ammo +" + ammoAmount
+                "🔫 Ammo +" +
+                ammoAmount
             );
+
+            // 🔊 เล่นเสียงเก็บ
+            if (pickupSound != null)
+            {
+                AudioSource.PlayClipAtPoint(
+                    pickupSound,
+                    transform.position
+                );
+            }
         }
 
         // ❌ ลบไอเทม
