@@ -56,7 +56,7 @@ public class WaveSpawnManager : MonoBehaviour
         }
 
         // =====================
-        // 🎉 WIN
+        //  WIN
         // =====================
 
         Debug.Log("ALL WAVES COMPLETED");

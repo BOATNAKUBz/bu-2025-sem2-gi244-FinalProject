@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class AllStageClearUI : MonoBehaviour
 {
-    // 🏠 กลับเมนู
+    //  กลับเมนู
     public void BackMenu()
     {
         SceneManager.LoadScene(

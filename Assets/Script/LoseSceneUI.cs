@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class LoseSceneUI : MonoBehaviour
 {
-    // 🔄 Retry
+    //  Retry
     public void RetryStage()
     {
         int currentStage =
@@ -21,7 +21,7 @@ public class LoseSceneUI : MonoBehaviour
         );
     }
 
-    // 🏠 Main Menu
+    //  Main Menu
     public void BackMenu()
     {
         SceneManager.LoadScene(

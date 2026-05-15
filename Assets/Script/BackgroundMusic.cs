@@ -15,7 +15,7 @@ public class BackgroundMusic : MonoBehaviour
 
         instance = this;
 
-        // 🔥 ไม่โดนลบตอนเปลี่ยน Scene
+        //  ไม่โดนลบตอนเปลี่ยน Scene
         DontDestroyOnLoad(gameObject);
     }
 }

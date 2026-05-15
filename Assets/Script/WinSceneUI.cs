@@ -3,16 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class WinSceneUI : MonoBehaviour
 {
-    // ➡ ไปด่านต่อไป
+    //  ไปด่านต่อไป
     public void NextStage()
     {
-        // 📌 ด่านล่าสุดที่เล่น
+        //  ด่านล่าสุดที่เล่น
         int currentStage =
             PlayerPrefs.GetInt(
                 "CurrentStage"
             );
 
-        // 📌 ด่านต่อไป
+        //  ด่านต่อไป
         int nextStage =
             currentStage + 1;
 
@@ -21,7 +21,7 @@ public class WinSceneUI : MonoBehaviour
         );
     }
 
-    // 🏠 กลับเมนู
+    //  กลับเมนู
     public void BackMenu()
     {
         SceneManager.LoadScene(

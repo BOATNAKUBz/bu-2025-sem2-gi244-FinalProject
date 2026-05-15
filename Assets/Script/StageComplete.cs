@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class StageComplete : MonoBehaviour
 {
     // =========================
-    // 🔊 หยุดเพลง
+    //  หยุดเพลง
     // =========================
     void StopBGM()
     {
@@ -18,16 +18,16 @@ public class StageComplete : MonoBehaviour
     }
 
     // =========================
-    // 🎉 WIN
+    //  WIN
     // =========================
     public void WinStage()
     {
         Time.timeScale = 1f;
 
-        // 🔊 หยุดเพลง
+        //  หยุดเพลง
         StopBGM();
 
-        // 📌 เซฟด่านปัจจุบัน
+        //  เซฟด่านปัจจุบัน
         int currentScene =
             SceneManager
             .GetActiveScene()
@@ -43,7 +43,7 @@ public class StageComplete : MonoBehaviour
             currentScene
         );
 
-        // 🔥 ถ้าเป็น Stage3
+        //  ถ้าเป็น Stage3
         if (currentScene == 5)
         {
             SceneManager.LoadScene(
@@ -59,16 +59,16 @@ public class StageComplete : MonoBehaviour
     }
 
     // =========================
-    // 💀 LOSE
+    //  LOSE
     // =========================
     public void LoseStage()
     {
         Time.timeScale = 1f;
 
-        // 🔊 หยุดเพลง
+        //  หยุดเพลง
         StopBGM();
 
-        // 📌 เซฟด่านปัจจุบัน
+        //  เซฟด่านปัจจุบัน
         int currentScene =
             SceneManager
             .GetActiveScene()
