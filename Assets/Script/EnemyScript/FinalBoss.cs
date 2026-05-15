@@ -146,7 +146,7 @@ public class FinalBoss : EnemyBase
             Instantiate(
                 warningCirclePrefab,
                 transform.position +
-                transform.forward * 3f,
+                transform.forward * 5f,
                 Quaternion.identity
             );
 
