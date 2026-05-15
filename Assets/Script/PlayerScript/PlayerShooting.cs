@@ -7,28 +7,28 @@ public class PlayerShooting : MonoBehaviour
     public Transform firePoint;
 
     // =========================
-    // 🔫 Normal Bullet
+    //  Normal Bullet
     // =========================
     [Header("Normal Bullet")]
     public GameObject normalBulletPrefab;
     public float normalFireRate = 0.2f;
 
     // =========================
-    // 💣 Bomb Bullet
+    // Bomb Bullet
     // =========================
     [Header("Bomb Bullet")]
     public GameObject bombBulletPrefab;
     public float bombFireRate = 1f;
 
     // =========================
-    // 🔋 Ammo
+    // Ammo
     // =========================
     [Header("Ammo")]
     public int maxAmmo = 30;
     public int currentAmmo;
 
     // =========================
-    // 💣 Bomb Ammo
+    // Bomb Ammo
     // =========================
     [Header("Bomb Ammo")]
     public int maxBombAmmo = 5;
@@ -54,7 +54,7 @@ public class PlayerShooting : MonoBehaviour
 
     void Update()
     {
-        // 🔫 ยิงปกติ
+        // ยิงปกติ
         if (Input.GetButton("Fire1")
             && canShoot
             && currentAmmo > 0)
@@ -64,7 +64,7 @@ public class PlayerShooting : MonoBehaviour
             );
         }
 
-        // 💣 ยิง Bomb
+        // ยิง Bomb
         if (Input.GetButtonDown("Fire2")
             && canBombShoot
             && currentBombAmmo > 0)
@@ -76,7 +76,7 @@ public class PlayerShooting : MonoBehaviour
     }
 
     // =========================
-    // 🔫 ยิงปกติ
+    // ยิงปกติ
     // =========================
     IEnumerator NormalShootRoutine()
     {
@@ -95,7 +95,7 @@ public class PlayerShooting : MonoBehaviour
     {
         currentAmmo--;
 
-        // 🔊 เสียงยิงปกติ
+        // เสียงยิงปกติ
         if (audioSource != null
             && shootSound != null)
         {
@@ -138,7 +138,7 @@ public class PlayerShooting : MonoBehaviour
     }
 
     // =========================
-    // 💣 ยิง Bomb
+    // ยิง Bomb
     // =========================
     IEnumerator BombShootRoutine()
     {
@@ -157,7 +157,7 @@ public class PlayerShooting : MonoBehaviour
     {
         currentBombAmmo--;
 
-        // 🔊 เสียงยิง Bomb
+        // เสียงยิง Bomb
         if (audioSource != null
             && bombShootSound != null)
         {
@@ -184,7 +184,7 @@ public class PlayerShooting : MonoBehaviour
     }
 
     // =========================
-    // 🔋 เติม Ammo
+    // เติม Ammo
     // =========================
     public void AddAmmo(int amount)
     {

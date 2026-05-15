@@ -13,7 +13,7 @@ public class EnemyExploder : EnemyBase
 
     [Header("Effect")]
     public GameObject explosionEffect;
-
+    public float explosioneffectLifeTime = 2f;
     private bool isExploding = false;
 
     void Update()
@@ -21,24 +21,24 @@ public class EnemyExploder : EnemyBase
         if (player == null || isExploding)
             return;
 
-        // 🎯 ทิศหา Player
+        //  ทิศหา Player
         Vector3 dir =
             (player.position - transform.position)
             .normalized;
 
         dir.y = 0;
 
-        // 👀 หันหน้า
+        //  หันหน้า
         transform.forward = dir;
 
-        // 📏 ระยะ
+        //  ระยะ
         float distance =
             Vector3.Distance(
                 transform.position,
                 player.position
             );
 
-        // 👣 วิ่งหา Player
+        // วิ่งหา Player
         if (distance > explodeRange)
         {
             transform.position +=
@@ -46,7 +46,7 @@ public class EnemyExploder : EnemyBase
                 moveSpeed *
                 Time.deltaTime;
 
-            // 🎬 วิ่ง
+            //  วิ่ง
             if (animator != null)
             {
                 animator.SetBool(
@@ -57,7 +57,7 @@ public class EnemyExploder : EnemyBase
         }
         else
         {
-            // 🛑 หยุดวิ่ง
+            //  หยุดวิ่ง
             if (animator != null)
             {
                 animator.SetBool(
@@ -66,7 +66,7 @@ public class EnemyExploder : EnemyBase
                 );
             }
 
-            // 💣 เริ่มระเบิด
+            // เริ่มระเบิด
             if (!isExploding)
             {
                 StartCoroutine(Explode());
@@ -80,28 +80,33 @@ public class EnemyExploder : EnemyBase
 
         Debug.Log("💣 EXPLODER");
 
-        // 🎬 ใช้ animation ยิงแทนระเบิด
+        // ใช้ animation ยิงแทนระเบิด
         if (animator != null)
         {
             animator.SetTrigger("Shoot");
         }
 
-        // ⏳ เวลาให้ player หนี
+        // เวลาให้ player หนี
         yield return new WaitForSeconds(
             explodeDelay
         );
 
-        // 💥 Effect ระเบิด
+        // Effect ระเบิด
         if (explosionEffect != null)
         {
-            Instantiate(
-                explosionEffect,
+            GameObject effect =
+           Instantiate(
+               explosionEffect,
                 transform.position,
                 Quaternion.identity
             );
+            Destroy(
+                 effect,
+                 effectLifeTime
+             );
         }
 
-        // 💥 เช็คดาเมจ
+        // เช็คดาเมจ
         if (player != null)
         {
             float dist =
@@ -128,7 +133,7 @@ public class EnemyExploder : EnemyBase
             }
         }
 
-        // ☠ ตาย
+        // ตาย
         Die();
     }
 }

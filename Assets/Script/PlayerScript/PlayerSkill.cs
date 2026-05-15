@@ -31,7 +31,7 @@ public class PlayerSkill : MonoBehaviour
 
         Debug.Log("AOE SKILL");
 
-        // ✨ สร้าง effect
+        // สร้าง effect
         if (effectPrefab != null)
         {
             GameObject effect =
@@ -41,14 +41,14 @@ public class PlayerSkill : MonoBehaviour
                     Quaternion.identity
                 );
 
-            // 🔥 ลบ effect อัตโนมัติ
+            //ลบ effect อัตโนมัติ
             Destroy(
                 effect,
                 effectLifeTime
             );
         }
 
-        // 🔍 หา enemy รอบตัว
+        // หาenemy รอบตัว
         Collider[] hits =
             Physics.OverlapSphere(
                 transform.position,
@@ -69,7 +69,7 @@ public class PlayerSkill : MonoBehaviour
             }
         }
 
-        // ⏳ cooldown
+        // cooldown
         yield return new WaitForSeconds(
             cooldown
         );
@@ -77,7 +77,7 @@ public class PlayerSkill : MonoBehaviour
         canUse = true;
     }
 
-    // 🔴 วาดวงใน Scene
+    //วาดวงใน Scene
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;

@@ -163,6 +163,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 30
+  deathEffect: {fileID: 0}
+  effectLifeTime: 2
 --- !u!54 &8197394168253982297
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -203,11 +205,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 30
+  deathEffect: {fileID: 0}
+  effectLifeTime: 1
   moveSpeed: 3
-  explodeRange: 2
+  explodeRange: 4
   explosionDamage: 80
-  explodeDelay: 1
-  explosionEffect: {fileID: 0}
+  explodeDelay: 2
+  explosionEffect: {fileID: 5034656251238326012, guid: 9de2fa19f0390d44491264d9cab8cec5, type: 3}
+  explosioneffectLifeTime: 1
 --- !u!1 &658150572396047549
 GameObject:
   m_ObjectHideFlags: 0

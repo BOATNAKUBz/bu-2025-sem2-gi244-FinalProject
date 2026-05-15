@@ -1281,6 +1281,7 @@ GameObject:
   - component: {fileID: 7134634336473169603}
   - component: {fileID: 3154540057620863767}
   - component: {fileID: -6094510185872993658}
+  - component: {fileID: 4321199818666100124}
   m_Layer: 8
   m_Name: player 1 1 1
   m_TagString: Player
@@ -1383,6 +1384,8 @@ MonoBehaviour:
   dashSpeed: 20
   dashTime: 0.2
   dashCooldown: 1
+  audioSource: {fileID: 0}
+  dashSound: {fileID: 0}
 --- !u!114 &4200544152974151871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1397,7 +1400,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
-  gameOverPanel: {fileID: 0}
+  audioSource: {fileID: 0}
+  hurtSound: {fileID: 0}
+  deathSound: {fileID: 0}
 --- !u!114 &7134634336473169603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1419,6 +1424,9 @@ MonoBehaviour:
   currentAmmo: 0
   maxBombAmmo: 5
   currentBombAmmo: 0
+  audioSource: {fileID: 0}
+  shootSound: {fileID: 0}
+  bombShootSound: {fileID: 0}
 --- !u!136 &3154540057620863767
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1459,6 +1467,20 @@ MonoBehaviour:
   cooldown: 5
   effectPrefab: {fileID: 1289543790355709915, guid: b99922c2f59b1a542bdd06ae8bee47ae, type: 3}
   effectLifeTime: 1
+--- !u!114 &4321199818666100124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6706244921306255091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20d6cc975025fe042b37cb9e4f152657, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileObjectPool
+  projectilePrefab: {fileID: 8257223487444606468, guid: 9e11a6cea01525b47965c1c513293ff2, type: 3}
+  initialPoolSize: 10
 --- !u!1 &6861307451799812614
 GameObject:
   m_ObjectHideFlags: 0

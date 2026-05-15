@@ -1684,6 +1684,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 30
+  deathEffect: {fileID: 4809171458859421548, guid: 4e91ed1a8efe7044785b9bd97a47d87f, type: 3}
   speed: 4
   stopDistance: 3
   damage: 10
@@ -1728,6 +1729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBase
   maxHP: 30
+  deathEffect: {fileID: 0}
 --- !u!1 &7999364984459962340
 GameObject:
   m_ObjectHideFlags: 0
