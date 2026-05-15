@@ -129,7 +129,7 @@ public class FinalBoss : EnemyBase
     }
 
     // =================================
-    // ⚔ Slash
+    // ⚔ Slash Attack
     // =================================
     IEnumerator SlashAttack()
     {
@@ -142,11 +142,16 @@ public class FinalBoss : EnemyBase
             );
         }
 
+        // 📌 จุดโจมตีด้านหน้า
+        Vector3 attackPoint =
+            transform.position +
+            transform.forward * 5f;
+
+        // ⚠ วงเตือน
         GameObject warning =
             Instantiate(
                 warningCirclePrefab,
-                transform.position +
-                transform.forward * 5f,
+                attackPoint,
                 Quaternion.identity
             );
 
@@ -161,19 +166,30 @@ public class FinalBoss : EnemyBase
             1f
         );
 
-        if (player != null)
-        {
-            float distance =
-                Vector3.Distance(
-                    transform.position,
-                    player.position
-                );
+        // 🔥 เช็คโดน player
+        Collider[] hits =
+            Physics.OverlapSphere(
+                attackPoint,
+                3f
+            );
 
-            if (distance < 4f)
+        foreach (Collider hit in hits)
+        {
+            if (hit.CompareTag("Player"))
             {
-                player
-                    .GetComponent<PlayerHealth>()
-                    ?.TakeDamage(damage);
+                PlayerHealth hp =
+                    hit.GetComponent<PlayerHealth>();
+
+                if (hp != null)
+                {
+                    hp.TakeDamage(
+                        damage
+                    );
+
+                    Debug.Log(
+                        "PLAYER HIT"
+                    );
+                }
             }
         }
 
@@ -181,7 +197,7 @@ public class FinalBoss : EnemyBase
     }
 
     // =================================
-    // 🌪 Spin
+    // 🌪 Spin Attack
     // =================================
     IEnumerator SpinAttack()
     {
@@ -223,19 +239,23 @@ public class FinalBoss : EnemyBase
                 Time.deltaTime
             );
 
-            if (player != null)
-            {
-                float distance =
-                    Vector3.Distance(
-                        transform.position,
-                        player.position
-                    );
+            Collider[] hits =
+                Physics.OverlapSphere(
+                    transform.position,
+                    4f
+                );
 
-                if (distance < 4f)
+            foreach (Collider hit in hits)
+            {
+                if (hit.CompareTag("Player"))
                 {
-                    player
-                        .GetComponent<PlayerHealth>()
-                        ?.TakeDamage(1);
+                    PlayerHealth hp =
+                        hit.GetComponent<PlayerHealth>();
+
+                    if (hp != null)
+                    {
+                        hp.TakeDamage(1);
+                    }
                 }
             }
 
@@ -279,21 +299,29 @@ public class FinalBoss : EnemyBase
             1.5f
         );
 
-        if (player != null)
-        {
-            float distance =
-                Vector3.Distance(
-                    transform.position,
-                    player.position
-                );
+        Collider[] hits =
+            Physics.OverlapSphere(
+                transform.position,
+                6f
+            );
 
-            if (distance < 6f)
+        foreach (Collider hit in hits)
+        {
+            if (hit.CompareTag("Player"))
             {
-                player
-                    .GetComponent<PlayerHealth>()
-                    ?.TakeDamage(
+                PlayerHealth hp =
+                    hit.GetComponent<PlayerHealth>();
+
+                if (hp != null)
+                {
+                    hp.TakeDamage(
                         damage + 10
                     );
+
+                    Debug.Log(
+                        "SHOCKWAVE HIT"
+                    );
+                }
             }
         }
 
@@ -301,7 +329,7 @@ public class FinalBoss : EnemyBase
     }
 
     // =================================
-    // ☠ ตาย
+    // ☠ Boss Dead
     // =================================
     protected override void Die()
     {
@@ -316,5 +344,22 @@ public class FinalBoss : EnemyBase
         }
 
         base.Die();
+    }
+
+    // =================================
+    // 🔴 Gizmos
+    // =================================
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+
+        Vector3 attackPoint =
+            transform.position +
+            transform.forward * 5f;
+
+        Gizmos.DrawWireSphere(
+            attackPoint,
+            3f
+        );
     }
 }
